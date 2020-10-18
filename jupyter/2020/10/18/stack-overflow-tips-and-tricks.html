@@ -4,19 +4,20 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="twitter:card" content="summary_large_image" /><!-- Begin Jekyll SEO tag v2.6.1 -->
-<title>Title | fastpages</title>
+<title>Pandas Tips and Tricks | fastpages</title>
 <meta name="generator" content="Jekyll v4.1.1" />
-<meta property="og:title" content="Title" />
+<meta property="og:title" content="Pandas Tips and Tricks" />
 <meta property="og:locale" content="en_US" />
-<meta name="description" content="An easy to use blogging platform with support for Jupyter Notebooks." />
-<meta property="og:description" content="An easy to use blogging platform with support for Jupyter Notebooks." />
-<link rel="canonical" href="https://gardnmi.github.io/blog/2020/10/18/stack-overflow-tips-and-tricks.html" />
-<meta property="og:url" content="https://gardnmi.github.io/blog/2020/10/18/stack-overflow-tips-and-tricks.html" />
+<meta name="description" content="Pandas Tips and Tricks learned from StackOverflow" />
+<meta property="og:description" content="Pandas Tips and Tricks learned from StackOverflow" />
+<link rel="canonical" href="https://gardnmi.github.io/blog/jupyter/2020/10/18/stack-overflow-tips-and-tricks.html" />
+<meta property="og:url" content="https://gardnmi.github.io/blog/jupyter/2020/10/18/stack-overflow-tips-and-tricks.html" />
 <meta property="og:site_name" content="fastpages" />
+<meta property="og:image" content="https://gardnmi.github.io/blog/images/chart-preview.png" />
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2020-10-18T00:00:00-05:00" />
 <script type="application/ld+json">
-{"description":"An easy to use blogging platform with support for Jupyter Notebooks.","url":"https://gardnmi.github.io/blog/2020/10/18/stack-overflow-tips-and-tricks.html","@type":"BlogPosting","headline":"Title","dateModified":"2020-10-18T00:00:00-05:00","datePublished":"2020-10-18T00:00:00-05:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://gardnmi.github.io/blog/2020/10/18/stack-overflow-tips-and-tricks.html"},"@context":"https://schema.org"}</script>
+{"description":"Pandas Tips and Tricks learned from StackOverflow","url":"https://gardnmi.github.io/blog/jupyter/2020/10/18/stack-overflow-tips-and-tricks.html","@type":"BlogPosting","headline":"Pandas Tips and Tricks","dateModified":"2020-10-18T00:00:00-05:00","datePublished":"2020-10-18T00:00:00-05:00","image":"https://gardnmi.github.io/blog/images/chart-preview.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://gardnmi.github.io/blog/jupyter/2020/10/18/stack-overflow-tips-and-tricks.html"},"@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 <link rel="stylesheet" href="/blog/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="https://gardnmi.github.io/blog/feed.xml" title="fastpages" /><link rel="shortcut icon" type="image/x-icon" href="/blog/images/favicon.ico"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Primer/15.2.0/primer.css" integrity="sha512-xTz2ys4coGAOz8vuV1NcQBkgVmKhsSEtjbqyMJbBHRplFuvKIUo6xhLHpAyPt9mfR6twHJgn9OgVLuqOvjeBhg==" crossorigin="anonymous" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSriVlkMXe40PTKnXrLnZ9+fkDaog==" crossorigin="anonymous" />
@@ -71,7 +72,7 @@ window.onload = wrap_img;
         <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
 
   <header class="post-header">
-    <h1 class="post-title p-name" itemprop="name headline">Title</h1><p class="post-meta post-meta-title"><time class="dt-published" datetime="2020-10-18T00:00:00-05:00" itemprop="datePublished">
+    <h1 class="post-title p-name" itemprop="name headline">Pandas Tips and Tricks</h1><p class="page-description">Pandas Tips and Tricks learned from StackOverflow</p><p class="post-meta post-meta-title"><time class="dt-published" datetime="2020-10-18T00:00:00-05:00" itemprop="datePublished">
         Oct 18, 2020
       </time>
        • <span class="read-time" title="Estimated read time">
@@ -81,6 +82,13 @@ window.onload = wrap_img;
     
 </span></p>
 
+    
+      <p class="category-tags"><i class="fas fa-tags category-tags-icon"></i></i> 
+      
+        <a class="category-tags-link" href="/blog/categories/#jupyter">jupyter</a>
+        
+      
+      </p>
     
 
     
@@ -108,7 +116,39 @@ window.onload = wrap_img;
       </header>
 
   <div class="post-content e-content" itemprop="articleBody">
-    <!--
+    <ul class="section-nav">
+<li class="toc-entry toc-h2"><a href="#np.where">np.where </a></li>
+<li class="toc-entry toc-h2"><a href="#np.select">np.select </a></li>
+<li class="toc-entry toc-h2"><a href="#Mask-/-Where">Mask / Where </a></li>
+<li class="toc-entry toc-h2"><a href="#Align-dummy-columns-between-train-and-test-sets">Align dummy columns between train and test sets </a></li>
+<li class="toc-entry toc-h2"><a href="#Understanding-Groupby">Understanding Groupby </a></li>
+<li class="toc-entry toc-h2"><a href="#Groupby-Filtering">Groupby Filtering </a></li>
+<li class="toc-entry toc-h2"><a href="#Groupby-Transform">Groupby Transform </a></li>
+<li class="toc-entry toc-h2"><a href="#Convert-an-Uneven-Dictonary-or-List-to-a-Dataframe">Convert an Uneven Dictonary or List to a Dataframe </a></li>
+<li class="toc-entry toc-h2"><a href="#Convert-Uneven-List-of-Tuples-to-a-Dataframe">Convert Uneven List of Tuples to a Dataframe </a></li>
+<li class="toc-entry toc-h2"><a href="#Decay-ffill">Decay ffill </a></li>
+<li class="toc-entry toc-h2"><a href="#Create-Columns-in-a-Loop">Create Columns in a Loop </a></li>
+<li class="toc-entry toc-h2"><a href="#Explode">Explode </a></li>
+<li class="toc-entry toc-h2"><a href="#Expand-Dataframe-based-on-a-Date-Range">Expand Dataframe based on a Date Range </a></li>
+<li class="toc-entry toc-h2"><a href="#Wide-to-Long">Wide to Long </a></li>
+<li class="toc-entry toc-h2"><a href="#Rolling-Mean">Rolling Mean </a></li>
+<li class="toc-entry toc-h2"><a href="#Rank-Multiple-Columns">Rank Multiple Columns </a></li>
+<li class="toc-entry toc-h2"><a href="#Select-Dates-Ignoring-Year">Select Dates Ignoring Year </a></li>
+<li class="toc-entry toc-h2"><a href="#Split-a-Dataframe-np.split">Split a Dataframe np.split </a></li>
+<li class="toc-entry toc-h2"><a href="#Apply-function-with-multiple-arguments">Apply function with multiple arguments </a></li>
+<li class="toc-entry toc-h2"><a href="#Custom-Styling">Custom Styling </a></li>
+<li class="toc-entry toc-h2"><a href="#Reverse-an-Array">Reverse an Array </a></li>
+<li class="toc-entry toc-h2"><a href="#Symmetric-difference">Symmetric difference </a></li>
+<li class="toc-entry toc-h2"><a href="#Transpose-a-3D-array">Transpose a 3D array </a></li>
+<li class="toc-entry toc-h2"><a href="#literal-eval">literal eval </a></li>
+<li class="toc-entry toc-h2"><a href="#Difference-between-Nan-and-None">Difference between Nan and None </a></li>
+<li class="toc-entry toc-h2"><a href="#str-accessor">str accessor </a></li>
+<li class="toc-entry toc-h2"><a href="#Regular-Expression">Regular Expression </a></li>
+<li class="toc-entry toc-h2"><a href="#Cartesian-Product">Cartesian Product </a></li>
+<li class="toc-entry toc-h2"><a href="#to_frame">to_frame </a></li>
+<li class="toc-entry toc-h2"><a href="#Date-Manipulation">Date Manipulation </a></li>
+<li class="toc-entry toc-h2"><a href="#Total-Seconds">Total Seconds </a></li>
+</ul><!--
 #################################################
 ### THIS FILE WAS AUTOGENERATED! DO NOT EDIT! ###
 #################################################
@@ -134,10 +174,11 @@ window.onload = wrap_img;
 </div>
     
 
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>I spent an entire month answering pandas related StackOverflow question earning over 1,000 reputation. Below are some of the more useful methods outside the basics which can used to solve common occuring data transformation problems.</p>
-<p><img src="https://i.imgur.com/0izJk8A.jpg" alt="StackOverFlow Profile" /></p>
+<p><img src="https://i.imgur.com/0izJk8A.jpg" alt="StackOverFlow Profile"></p>
 
 </div>
 </div>
@@ -160,9 +201,13 @@ window.onload = wrap_img;
 </div>
     
 
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="np.where">np.where<a class="anchor-link" href="#np.where"> </a></h2><p>A faster way to implement an if else condition</p>
+<h2 id="np.where">
+<a class="anchor" href="#np.where" aria-hidden="true"><span class="octicon octicon-link"></span></a>np.where<a class="anchor-link" href="#np.where"> </a>
+</h2>
+<p>A faster way to implement an if else condition</p>
 
 </div>
 </div>
@@ -174,7 +219,7 @@ window.onload = wrap_img;
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([</span><span class="s1">&#39;Dog&#39;</span><span class="p">,</span> <span class="s1">&#39;Cat&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">2</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Adult&#39;</span><span class="p">])</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([</span><span class="s1">'Dog'</span><span class="p">,</span> <span class="s1">'Cat'</span><span class="p">]</span> <span class="o">*</span> <span class="mi">2</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">'Adult'</span><span class="p">])</span>
 
 <span class="n">df</span>
 </pre></div>
@@ -248,7 +293,7 @@ window.onload = wrap_img;
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;Baby&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;Adult&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">eq</span><span class="p">(</span><span class="s1">&#39;Dog&#39;</span><span class="p">),</span> <span class="s1">&#39;Puppy&#39;</span><span class="p">,</span> <span class="s1">&#39;Kitten&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="p">[</span><span class="s1">'Baby'</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">'Adult'</span><span class="p">]</span><span class="o">.</span><span class="n">eq</span><span class="p">(</span><span class="s1">'Dog'</span><span class="p">),</span> <span class="s1">'Puppy'</span><span class="p">,</span> <span class="s1">'Kitten'</span><span class="p">)</span>
 
 <span class="n">df</span>
 </pre></div>
@@ -320,9 +365,13 @@ window.onload = wrap_img;
 </div>
     
 
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="np.select">np.select<a class="anchor-link" href="#np.select"> </a></h2><p>An alternative to np.where when you have multiple conditions</p>
+<h2 id="np.select">
+<a class="anchor" href="#np.select" aria-hidden="true"><span class="octicon octicon-link"></span></a>np.select<a class="anchor-link" href="#np.select"> </a>
+</h2>
+<p>An alternative to np.where when you have multiple conditions</p>
 
 </div>
 </div>
@@ -334,7 +383,7 @@ window.onload = wrap_img;
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">&quot;color&quot;</span>  <span class="p">:</span> <span class="p">[</span><span class="s2">&quot;red&quot;</span><span class="p">,</span> <span class="s2">&quot;green&quot;</span><span class="p">,</span> <span class="s2">&quot;blue&quot;</span><span class="p">,</span> <span class="s2">&quot;black&quot;</span><span class="p">,</span> <span class="s2">&quot;white&quot;</span><span class="p">,</span> <span class="s2">&quot;purple&quot;</span><span class="p">]})</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">"color"</span>  <span class="p">:</span> <span class="p">[</span><span class="s2">"red"</span><span class="p">,</span> <span class="s2">"green"</span><span class="p">,</span> <span class="s2">"blue"</span><span class="p">,</span> <span class="s2">"black"</span><span class="p">,</span> <span class="s2">"white"</span><span class="p">,</span> <span class="s2">"purple"</span><span class="p">]})</span>
 
 <span class="n">df</span>
 </pre></div>
@@ -416,12 +465,12 @@ window.onload = wrap_img;
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">conditions</span> <span class="o">=</span> <span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">color</span><span class="o">.</span><span class="n">isin</span><span class="p">([</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="s1">&#39;green&#39;</span><span class="p">,</span> <span class="s1">&#39;blue&#39;</span><span class="p">]),</span> <span class="n">df</span><span class="o">.</span><span class="n">color</span><span class="o">.</span><span class="n">eq</span><span class="p">(</span><span class="s1">&#39;black&#39;</span><span class="p">)</span> <span class="o">|</span> <span class="n">df</span><span class="o">.</span><span class="n">color</span><span class="o">.</span><span class="n">eq</span><span class="p">(</span><span class="s1">&#39;white&#39;</span><span class="p">)]</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">conditions</span> <span class="o">=</span> <span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">color</span><span class="o">.</span><span class="n">isin</span><span class="p">([</span><span class="s1">'red'</span><span class="p">,</span> <span class="s1">'green'</span><span class="p">,</span> <span class="s1">'blue'</span><span class="p">]),</span> <span class="n">df</span><span class="o">.</span><span class="n">color</span><span class="o">.</span><span class="n">eq</span><span class="p">(</span><span class="s1">'black'</span><span class="p">)</span> <span class="o">|</span> <span class="n">df</span><span class="o">.</span><span class="n">color</span><span class="o">.</span><span class="n">eq</span><span class="p">(</span><span class="s1">'white'</span><span class="p">)]</span>
 
 <span class="c1"># create a list of choices, if both conditions are True then the first choice is choosen</span>
-<span class="n">choices</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;rgb&#39;</span><span class="p">,</span> <span class="s1">&#39;b&amp;w&#39;</span><span class="p">]</span>
+<span class="n">choices</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'rgb'</span><span class="p">,</span> <span class="s1">'b&amp;w'</span><span class="p">]</span>
 
-<span class="n">df</span><span class="p">[</span><span class="s1">&#39;category&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">condlist</span><span class="o">=</span><span class="n">conditions</span><span class="p">,</span> <span class="n">choicelist</span><span class="o">=</span><span class="n">choices</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">df</span><span class="o">.</span><span class="n">color</span><span class="p">)</span>
+<span class="n">df</span><span class="p">[</span><span class="s1">'category'</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">condlist</span><span class="o">=</span><span class="n">conditions</span><span class="p">,</span> <span class="n">choicelist</span><span class="o">=</span><span class="n">choices</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">df</span><span class="o">.</span><span class="n">color</span><span class="p">)</span>
 
 <span class="n">df</span>
 </pre></div>
@@ -511,14 +560,14 @@ window.onload = wrap_img;
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">func</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
-    <span class="k">if</span> <span class="n">df</span><span class="o">.</span><span class="n">color</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="s1">&#39;green&#39;</span><span class="p">,</span> <span class="s1">&#39;blue&#39;</span><span class="p">]:</span>
-        <span class="k">return</span> <span class="s1">&#39;rgb&#39;</span>
-    <span class="k">elif</span> <span class="n">df</span><span class="o">.</span><span class="n">color</span> <span class="o">==</span> <span class="s1">&#39;black&#39;</span> <span class="ow">or</span> <span class="n">df</span><span class="o">.</span><span class="n">color</span> <span class="o">==</span> <span class="s1">&#39;white&#39;</span><span class="p">:</span>
-        <span class="k">return</span> <span class="s1">&#39;b&amp;w&#39;</span>
+    <span class="k">if</span> <span class="n">df</span><span class="o">.</span><span class="n">color</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'red'</span><span class="p">,</span> <span class="s1">'green'</span><span class="p">,</span> <span class="s1">'blue'</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="s1">'rgb'</span>
+    <span class="k">elif</span> <span class="n">df</span><span class="o">.</span><span class="n">color</span> <span class="o">==</span> <span class="s1">'black'</span> <span class="ow">or</span> <span class="n">df</span><span class="o">.</span><span class="n">color</span> <span class="o">==</span> <span class="s1">'white'</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s1">'b&amp;w'</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">df</span><span class="o">.</span><span class="n">color</span>
 
-<span class="n">df</span><span class="p">[</span><span class="s1">&#39;category&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">df</span><span class="p">[</span><span class="s1">'category'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
 <span class="n">df</span>
 </pre></div>
@@ -600,9 +649,13 @@ window.onload = wrap_img;
 </div>
     
 
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Mask-/-Where">Mask / Where<a class="anchor-link" href="#Mask-/-Where"> </a></h2><p>A quick way to return a value when a condition is (not) met.</p>
+<h2 id="Mask-/-Where">
+<a class="anchor" href="#Mask-/-Where" aria-hidden="true"><span class="octicon octicon-link"></span></a>Mask / Where<a class="anchor-link" href="#Mask-/-Where"> </a>
+</h2>
+<p>A quick way to return a value when a condition is (not) met.</p>
 <p><a href="https://stackoverflow.com/questions/51982417/pandas-mask-where-methods-versus-numpy-np-where">https://stackoverflow.com/questions/51982417/pandas-mask-where-methods-versus-numpy-np-where</a></p>
 
 </div>
@@ -615,7 +668,7 @@ window.onload = wrap_img;
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([[</span><span class="s1">&#39;1&#39;</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;1&#39;</span><span class="p">,</span> <span class="mi">30</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;1&#39;</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;2&#39;</span><span class="p">,</span> <span class="mi">40</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;2&#39;</span><span class="p">,</span> <span class="mi">40</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;2&#39;</span><span class="p">,</span> <span class="mi">40</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;3&#39;</span><span class="p">,</span> <span class="mi">20</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;3&#39;</span><span class="p">,</span> <span class="mi">40</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;3&#39;</span><span class="p">,</span> <span class="mi">10</span><span class="p">]],</span> <span class="n">columns</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="s1">&#39;sample&#39;</span><span class="p">))</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([[</span><span class="s1">'1'</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span> <span class="p">[</span><span class="s1">'1'</span><span class="p">,</span> <span class="mi">30</span><span class="p">],</span> <span class="p">[</span><span class="s1">'1'</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span> <span class="p">[</span><span class="s1">'2'</span><span class="p">,</span> <span class="mi">40</span><span class="p">],</span> <span class="p">[</span><span class="s1">'2'</span><span class="p">,</span> <span class="mi">40</span><span class="p">],</span> <span class="p">[</span><span class="s1">'2'</span><span class="p">,</span> <span class="mi">40</span><span class="p">],</span> <span class="p">[</span><span class="s1">'3'</span><span class="p">,</span> <span class="mi">20</span><span class="p">],</span> <span class="p">[</span><span class="s1">'3'</span><span class="p">,</span> <span class="mi">40</span><span class="p">],</span> <span class="p">[</span><span class="s1">'3'</span><span class="p">,</span> <span class="mi">10</span><span class="p">]],</span> <span class="n">columns</span><span class="o">=</span><span class="p">(</span><span class="s1">'id'</span><span class="p">,</span> <span class="s1">'sample'</span><span class="p">))</span>
 
 <span class="n">df</span>
 </pre></div>
@@ -719,7 +772,7 @@ window.onload = wrap_img;
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">mask</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">eq</span><span class="p">(</span><span class="s1">&#39;2&#39;</span><span class="p">),</span> <span class="s1">&#39;mask&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">mask</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">'id'</span><span class="p">]</span><span class="o">.</span><span class="n">eq</span><span class="p">(</span><span class="s1">'2'</span><span class="p">),</span> <span class="s1">'mask'</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -821,7 +874,7 @@ window.onload = wrap_img;
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">eq</span><span class="p">(</span><span class="s1">&#39;2&#39;</span><span class="p">),</span> <span class="s1">&#39;where&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">'id'</span><span class="p">]</span><span class="o">.</span><span class="n">eq</span><span class="p">(</span><span class="s1">'2'</span><span class="p">),</span> <span class="s1">'where'</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -916,9 +969,13 @@ window.onload = wrap_img;
 </div>
     
 
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Align-dummy-columns-between-train-and-test-sets">Align dummy columns between train and test sets<a class="anchor-link" href="#Align-dummy-columns-between-train-and-test-sets"> </a></h2><p>In machine learning, your train and test sets may become misaligned when creating dummy columns.  This will result in an error.</p>
+<h2 id="Align-dummy-columns-between-train-and-test-sets">
+<a class="anchor" href="#Align-dummy-columns-between-train-and-test-sets" aria-hidden="true"><span class="octicon octicon-link"></span></a>Align dummy columns between train and test sets<a class="anchor-link" href="#Align-dummy-columns-between-train-and-test-sets"> </a>
+</h2>
+<p>In machine learning, your train and test sets may become misaligned when creating dummy columns.  This will result in an error.</p>
 <p><a href="https://stackoverflow.com/questions/58136267/check-reference-list-in-pandas-column-using-numpy-vectorization">https://stackoverflow.com/questions/58136267/check-reference-list-in-pandas-column-using-numpy-vectorization</a></p>
 
 </div>
@@ -931,7 +988,7 @@ window.onload = wrap_img;
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">,</span> <span class="s1">&#39;Z&#39;</span><span class="p">,</span> <span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">,</span> <span class="s1">&#39;D&#39;</span><span class="p">,</span> <span class="s1">&#39;E&#39;</span><span class="p">,</span> <span class="s1">&#39;X&#39;</span><span class="p">,</span> <span class="s1">&#39;Y&#39;</span><span class="p">],</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Letter&#39;</span><span class="p">])</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([</span><span class="s1">'A'</span><span class="p">,</span> <span class="s1">'B'</span><span class="p">,</span> <span class="s1">'C'</span><span class="p">,</span> <span class="s1">'Z'</span><span class="p">,</span> <span class="s1">'A'</span><span class="p">,</span> <span class="s1">'C'</span><span class="p">,</span> <span class="s1">'D'</span><span class="p">,</span> <span class="s1">'E'</span><span class="p">,</span> <span class="s1">'X'</span><span class="p">,</span> <span class="s1">'Y'</span><span class="p">],</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">'Letter'</span><span class="p">])</span>
 
 <span class="n">df</span>
 </pre></div>
@@ -1329,9 +1386,13 @@ window.onload = wrap_img;
 </div>
     
 
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Understanding-Groupby">Understanding Groupby<a class="anchor-link" href="#Understanding-Groupby"> </a></h2><p>Grouping your data can solve a lot of transformation challenges.  It's a good idea to understand how it works.</p>
+<h2 id="Understanding-Groupby">
+<a class="anchor" href="#Understanding-Groupby" aria-hidden="true"><span class="octicon octicon-link"></span></a>Understanding Groupby<a class="anchor-link" href="#Understanding-Groupby"> </a>
+</h2>
+<p>Grouping your data can solve a lot of transformation challenges.  It's a good idea to understand how it works.</p>
 <p><a href="https://pandas.pydata.org/pandas-docs/stable/user_guide/groupby.html">https://pandas.pydata.org/pandas-docs/stable/user_guide/groupby.html</a></p>
 
 </div>
@@ -1345,8 +1406,8 @@ window.onload = wrap_img;
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
-    <span class="s1">&#39;Name&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;David&#39;</span><span class="p">,</span> <span class="s1">&#39;David&#39;</span><span class="p">,</span> <span class="s1">&#39;Steve&#39;</span> <span class="p">,</span><span class="s1">&#39;Harry&#39;</span><span class="p">,</span> <span class="s1">&#39;Harry&#39;</span><span class="p">],</span>
-    <span class="s1">&#39;Zip Code&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">55555</span><span class="p">,</span> <span class="mi">55555</span><span class="p">,</span> <span class="mi">44444</span><span class="p">,</span> <span class="mi">55555</span><span class="p">,</span> <span class="mi">66666</span><span class="p">]</span>
+    <span class="s1">'Name'</span><span class="p">:</span> <span class="p">[</span><span class="s1">'David'</span><span class="p">,</span> <span class="s1">'David'</span><span class="p">,</span> <span class="s1">'Steve'</span> <span class="p">,</span><span class="s1">'Harry'</span><span class="p">,</span> <span class="s1">'Harry'</span><span class="p">],</span>
+    <span class="s1">'Zip Code'</span><span class="p">:</span> <span class="p">[</span><span class="mi">55555</span><span class="p">,</span> <span class="mi">55555</span><span class="p">,</span> <span class="mi">44444</span><span class="p">,</span> <span class="mi">55555</span><span class="p">,</span> <span class="mi">66666</span><span class="p">]</span>
 <span class="p">})</span>
 
 <span class="n">df</span>
@@ -1431,7 +1492,7 @@ window.onload = wrap_img;
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">group</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;Name&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">group</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">'Name'</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -1449,7 +1510,7 @@ window.onload = wrap_img;
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">dataframe</span> <span class="ow">in</span> <span class="n">group</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s1"> </span><span class="se">\n</span><span class="s1"> </span><span class="si">{</span><span class="n">dataframe</span><span class="si">}</span><span class="s1"> </span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s1"> </span><span class="se">\n</span><span class="s1"> </span><span class="si">{</span><span class="n">dataframe</span><span class="si">}</span><span class="s1"> </span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -1509,9 +1570,9 @@ Steve
 
 <div class="output_text output_subarea output_execute_result">
 <pre>Name
-David    &lt;class &#39;pandas.core.frame.DataFrame&#39;&gt;
-Harry    &lt;class &#39;pandas.core.frame.DataFrame&#39;&gt;
-Steve    &lt;class &#39;pandas.core.frame.DataFrame&#39;&gt;
+David    &lt;class 'pandas.core.frame.DataFrame'&gt;
+Harry    &lt;class 'pandas.core.frame.DataFrame'&gt;
+Steve    &lt;class 'pandas.core.frame.DataFrame'&gt;
 dtype: object</pre>
 </div>
 
@@ -1523,9 +1584,13 @@ dtype: object</pre>
 </div>
     
 
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Groupby-Filtering">Groupby Filtering<a class="anchor-link" href="#Groupby-Filtering"> </a></h2><p>If you want to select subsets of data within each group you can use filter.</p>
+<h2 id="Groupby-Filtering">
+<a class="anchor" href="#Groupby-Filtering" aria-hidden="true"><span class="octicon octicon-link"></span></a>Groupby Filtering<a class="anchor-link" href="#Groupby-Filtering"> </a>
+</h2>
+<p>If you want to select subsets of data within each group you can use filter.</p>
 <p><a href="https://stackoverflow.com/questions/58453245/pandas-match-and-unmatch-on-differnt-columns-in-python">https://stackoverflow.com/questions/58453245/pandas-match-and-unmatch-on-differnt-columns-in-python</a></p>
 
 </div>
@@ -1539,8 +1604,8 @@ dtype: object</pre>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
-    <span class="s1">&#39;Name&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;David&#39;</span><span class="p">,</span> <span class="s1">&#39;David&#39;</span><span class="p">,</span> <span class="s1">&#39;Steve&#39;</span> <span class="p">,</span><span class="s1">&#39;Harry&#39;</span><span class="p">,</span> <span class="s1">&#39;Harry&#39;</span><span class="p">],</span>
-    <span class="s1">&#39;Zip Code&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">55555</span><span class="p">,</span> <span class="mi">55555</span><span class="p">,</span> <span class="mi">44444</span><span class="p">,</span> <span class="mi">55555</span><span class="p">,</span> <span class="mi">66666</span><span class="p">]</span>
+    <span class="s1">'Name'</span><span class="p">:</span> <span class="p">[</span><span class="s1">'David'</span><span class="p">,</span> <span class="s1">'David'</span><span class="p">,</span> <span class="s1">'Steve'</span> <span class="p">,</span><span class="s1">'Harry'</span><span class="p">,</span> <span class="s1">'Harry'</span><span class="p">],</span>
+    <span class="s1">'Zip Code'</span><span class="p">:</span> <span class="p">[</span><span class="mi">55555</span><span class="p">,</span> <span class="mi">55555</span><span class="p">,</span> <span class="mi">44444</span><span class="p">,</span> <span class="mi">55555</span><span class="p">,</span> <span class="mi">66666</span><span class="p">]</span>
 <span class="p">})</span>
 
 <span class="n">df</span>
@@ -1625,7 +1690,7 @@ dtype: object</pre>
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;Name&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">nunique</span><span class="p">()</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">'Name'</span><span class="p">)</span><span class="o">.</span><span class="n">nunique</span><span class="p">()</span>
 </pre></div>
 
     </div>
@@ -1702,10 +1767,10 @@ dtype: object</pre>
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;Name&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="s1">&#39;Zip Code&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">nunique</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">'Name'</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="s1">'Zip Code'</span><span class="p">]</span><span class="o">.</span><span class="n">nunique</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span>
 
 <span class="c1"># alternative using transform</span>
-<span class="n">df</span><span class="p">[(</span><span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;Name&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="s1">&#39;nunique&#39;</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="p">]</span>
+<span class="n">df</span><span class="p">[(</span><span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">'Name'</span><span class="p">)</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="s1">'nunique'</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="p">]</span>
 </pre></div>
 
     </div>
@@ -1765,9 +1830,13 @@ dtype: object</pre>
 </div>
     
 
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Groupby-Transform">Groupby Transform<a class="anchor-link" href="#Groupby-Transform"> </a></h2><p>Returns an aggregated result of the same size of the original dataframe</p>
+<h2 id="Groupby-Transform">
+<a class="anchor" href="#Groupby-Transform" aria-hidden="true"><span class="octicon octicon-link"></span></a>Groupby Transform<a class="anchor-link" href="#Groupby-Transform"> </a>
+</h2>
+<p>Returns an aggregated result of the same size of the original dataframe</p>
 
 </div>
 </div>
@@ -1780,8 +1849,8 @@ dtype: object</pre>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
-    <span class="s1">&#39;Name&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;David&#39;</span><span class="p">,</span> <span class="s1">&#39;David&#39;</span><span class="p">,</span> <span class="s1">&#39;Steve&#39;</span> <span class="p">,</span><span class="s1">&#39;Harry&#39;</span><span class="p">,</span> <span class="s1">&#39;Harry&#39;</span><span class="p">],</span>
-    <span class="s1">&#39;Count&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">25</span><span class="p">,</span> <span class="mi">5</span><span class="p">]</span>
+    <span class="s1">'Name'</span><span class="p">:</span> <span class="p">[</span><span class="s1">'David'</span><span class="p">,</span> <span class="s1">'David'</span><span class="p">,</span> <span class="s1">'Steve'</span> <span class="p">,</span><span class="s1">'Harry'</span><span class="p">,</span> <span class="s1">'Harry'</span><span class="p">],</span>
+    <span class="s1">'Count'</span><span class="p">:</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">25</span><span class="p">,</span> <span class="mi">5</span><span class="p">]</span>
 <span class="p">})</span>
 
 <span class="n">df</span>
@@ -1866,7 +1935,7 @@ dtype: object</pre>
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;Name&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">'Name'</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
 </pre></div>
 
     </div>
@@ -1938,7 +2007,7 @@ dtype: object</pre>
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;Total&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;Name&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="s1">&#39;sum&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="p">[</span><span class="s1">'Total'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">'Name'</span><span class="p">)</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="s1">'sum'</span><span class="p">)</span>
 
 <span class="n">df</span>
 </pre></div>
@@ -2021,9 +2090,13 @@ dtype: object</pre>
 </div>
     
 
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Convert-an-Uneven-Dictonary-or-List-to-a-Dataframe">Convert an Uneven Dictonary or List to a Dataframe<a class="anchor-link" href="#Convert-an-Uneven-Dictonary-or-List-to-a-Dataframe"> </a></h2><p><a href="https://stackoverflow.com/questions/19736080/creating-dataframe-from-a-dictionary-where-entries-have-different-lengths">https://stackoverflow.com/questions/19736080/creating-dataframe-from-a-dictionary-where-entries-have-different-lengths</a></p>
+<h2 id="Convert-an-Uneven-Dictonary-or-List-to-a-Dataframe">
+<a class="anchor" href="#Convert-an-Uneven-Dictonary-or-List-to-a-Dataframe" aria-hidden="true"><span class="octicon octicon-link"></span></a>Convert an Uneven Dictonary or List to a Dataframe<a class="anchor-link" href="#Convert-an-Uneven-Dictonary-or-List-to-a-Dataframe"> </a>
+</h2>
+<p><a href="https://stackoverflow.com/questions/19736080/creating-dataframe-from-a-dictionary-where-entries-have-different-lengths">https://stackoverflow.com/questions/19736080/creating-dataframe-from-a-dictionary-where-entries-have-different-lengths</a></p>
 
 </div>
 </div>
@@ -2052,7 +2125,7 @@ dtype: object</pre>
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>{&#39;A&#39;: array([1, 2]), &#39;B&#39;: array([1, 2, 3, 4])}</pre>
+<pre>{'A': array([1, 2]), 'B': array([1, 2, 3, 4])}</pre>
 </div>
 
 </div>
@@ -2251,9 +2324,13 @@ dtype: object</pre>
 </div>
     
 
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Convert-Uneven-List-of-Tuples-to-a-Dataframe">Convert Uneven List of Tuples to a Dataframe<a class="anchor-link" href="#Convert-Uneven-List-of-Tuples-to-a-Dataframe"> </a></h2><p><a href="https://stackoverflow.com/questions/58450965/list-of-lists-conversion-to-pandas-dataframe">https://stackoverflow.com/questions/58450965/list-of-lists-conversion-to-pandas-dataframe</a></p>
+<h2 id="Convert-Uneven-List-of-Tuples-to-a-Dataframe">
+<a class="anchor" href="#Convert-Uneven-List-of-Tuples-to-a-Dataframe" aria-hidden="true"><span class="octicon octicon-link"></span></a>Convert Uneven List of Tuples to a Dataframe<a class="anchor-link" href="#Convert-Uneven-List-of-Tuples-to-a-Dataframe"> </a>
+</h2>
+<p><a href="https://stackoverflow.com/questions/58450965/list-of-lists-conversion-to-pandas-dataframe">https://stackoverflow.com/questions/58450965/list-of-lists-conversion-to-pandas-dataframe</a></p>
 
 </div>
 </div>
@@ -2266,9 +2343,9 @@ dtype: object</pre>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="p">[(</span><span class="s1">&#39;category&#39;</span><span class="p">,</span> <span class="s1">&#39;evaluation&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;polarity&#39;</span><span class="p">,</span> <span class="s1">&#39;pos&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;strength&#39;</span><span class="p">,</span> <span class="s1">&#39;1&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;type&#39;</span><span class="p">,</span> <span class="s1">&#39;good&#39;</span><span class="p">)],</span> 
-    <span class="p">[(</span><span class="s1">&#39;category&#39;</span><span class="p">,</span> <span class="s1">&#39;intensifier&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;type&#39;</span><span class="p">,</span> <span class="s1">&#39;shifter&#39;</span><span class="p">)],</span>
-    <span class="p">[(</span><span class="s1">&#39;category&#39;</span><span class="p">,</span> <span class="s1">&#39;evaluation&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;polarity&#39;</span><span class="p">,</span> <span class="s1">&#39;pos&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;strength&#39;</span><span class="p">,</span> <span class="s1">&#39;2&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;type&#39;</span><span class="p">,</span> <span class="s1">&#39;good&#39;</span><span class="p">)]</span>
+    <span class="p">[(</span><span class="s1">'category'</span><span class="p">,</span> <span class="s1">'evaluation'</span><span class="p">),</span> <span class="p">(</span><span class="s1">'polarity'</span><span class="p">,</span> <span class="s1">'pos'</span><span class="p">),</span> <span class="p">(</span><span class="s1">'strength'</span><span class="p">,</span> <span class="s1">'1'</span><span class="p">),</span> <span class="p">(</span><span class="s1">'type'</span><span class="p">,</span> <span class="s1">'good'</span><span class="p">)],</span> 
+    <span class="p">[(</span><span class="s1">'category'</span><span class="p">,</span> <span class="s1">'intensifier'</span><span class="p">),</span> <span class="p">(</span><span class="s1">'type'</span><span class="p">,</span> <span class="s1">'shifter'</span><span class="p">)],</span>
+    <span class="p">[(</span><span class="s1">'category'</span><span class="p">,</span> <span class="s1">'evaluation'</span><span class="p">),</span> <span class="p">(</span><span class="s1">'polarity'</span><span class="p">,</span> <span class="s1">'pos'</span><span class="p">),</span> <span class="p">(</span><span class="s1">'strength'</span><span class="p">,</span> <span class="s1">'2'</span><span class="p">),</span> <span class="p">(</span><span class="s1">'type'</span><span class="p">,</span> <span class="s1">'good'</span><span class="p">)]</span>
 <span class="p">]</span>
 </pre></div>
 
@@ -2301,15 +2378,15 @@ dtype: object</pre>
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>[{&#39;category&#39;: &#39;evaluation&#39;,
-  &#39;polarity&#39;: &#39;pos&#39;,
-  &#39;strength&#39;: &#39;1&#39;,
-  &#39;type&#39;: &#39;good&#39;},
- {&#39;category&#39;: &#39;intensifier&#39;, &#39;type&#39;: &#39;shifter&#39;},
- {&#39;category&#39;: &#39;evaluation&#39;,
-  &#39;polarity&#39;: &#39;pos&#39;,
-  &#39;strength&#39;: &#39;2&#39;,
-  &#39;type&#39;: &#39;good&#39;}]</pre>
+<pre>[{'category': 'evaluation',
+  'polarity': 'pos',
+  'strength': '1',
+  'type': 'good'},
+ {'category': 'intensifier', 'type': 'shifter'},
+ {'category': 'evaluation',
+  'polarity': 'pos',
+  'strength': '2',
+  'type': 'good'}]</pre>
 </div>
 
 </div>
@@ -2402,9 +2479,13 @@ dtype: object</pre>
 </div>
     
 
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Decay-ffill">Decay ffill<a class="anchor-link" href="#Decay-ffill"> </a></h2><p>A vectorized implementation of a custom forward fill function.</p>
+<h2 id="Decay-ffill">
+<a class="anchor" href="#Decay-ffill" aria-hidden="true"><span class="octicon octicon-link"></span></a>Decay ffill<a class="anchor-link" href="#Decay-ffill"> </a>
+</h2>
+<p>A vectorized implementation of a custom forward fill function.</p>
 <p><a href="https://stackoverflow.com/questions/58404949/how-to-speed-up-a-decay-ffill-function-for-pandas-series">https://stackoverflow.com/questions/58404949/how-to-speed-up-a-decay-ffill-function-for-pandas-series</a></p>
 
 </div>
@@ -2515,9 +2596,13 @@ dtype: float64</pre>
 </div>
     
 
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Create-Columns-in-a-Loop">Create Columns in a Loop<a class="anchor-link" href="#Create-Columns-in-a-Loop"> </a></h2><p><a href="https://stackoverflow.com/questions/58364225/grouping-by-and-applying-lambda-with-condition-for-the-first-row-pandas">https://stackoverflow.com/questions/58364225/grouping-by-and-applying-lambda-with-condition-for-the-first-row-pandas</a></p>
+<h2 id="Create-Columns-in-a-Loop">
+<a class="anchor" href="#Create-Columns-in-a-Loop" aria-hidden="true"><span class="octicon octicon-link"></span></a>Create Columns in a Loop<a class="anchor-link" href="#Create-Columns-in-a-Loop"> </a>
+</h2>
+<p><a href="https://stackoverflow.com/questions/58364225/grouping-by-and-applying-lambda-with-condition-for-the-first-row-pandas">https://stackoverflow.com/questions/58364225/grouping-by-and-applying-lambda-with-condition-for-the-first-row-pandas</a></p>
 
 </div>
 </div>
@@ -2529,7 +2614,7 @@ dtype: float64</pre>
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">6</span><span class="p">),</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;number&#39;</span><span class="p">])</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">6</span><span class="p">),</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">'number'</span><span class="p">])</span>
 
 <span class="n">df</span>
 </pre></div>
@@ -2608,7 +2693,7 @@ dtype: float64</pre>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">for</span> <span class="n">num</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">number</span><span class="p">:</span>
-    <span class="n">df</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;number x </span><span class="si">{</span><span class="n">num</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">num</span> <span class="o">*</span> <span class="n">df</span><span class="o">.</span><span class="n">number</span>
+    <span class="n">df</span><span class="p">[</span><span class="sa">f</span><span class="s1">'number x </span><span class="si">{</span><span class="n">num</span><span class="si">}</span><span class="s1">'</span><span class="p">]</span> <span class="o">=</span> <span class="n">num</span> <span class="o">*</span> <span class="n">df</span><span class="o">.</span><span class="n">number</span>
     
 <span class="n">df</span>
 </pre></div>
@@ -2709,9 +2794,13 @@ dtype: float64</pre>
 </div>
     
 
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Explode">Explode<a class="anchor-link" href="#Explode"> </a></h2><p>Transform List Like Elements into individual rows</p>
+<h2 id="Explode">
+<a class="anchor" href="#Explode" aria-hidden="true"><span class="octicon octicon-link"></span></a>Explode<a class="anchor-link" href="#Explode"> </a>
+</h2>
+<p>Transform List Like Elements into individual rows</p>
 <p>(only v.25 and above)</p>
 
 </div>
@@ -2739,7 +2828,7 @@ dtype: float64</pre>
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>&#39;0.25.1&#39;</pre>
+<pre>'0.25.1'</pre>
 </div>
 
 </div>
@@ -2757,7 +2846,7 @@ dtype: float64</pre>
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([[[</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">]],</span> <span class="p">[[</span><span class="s1">&#39;D&#39;</span><span class="p">,</span> <span class="s1">&#39;E&#39;</span><span class="p">,</span> <span class="s1">&#39;F&#39;</span><span class="p">]]],</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;lists&#39;</span><span class="p">])</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([[[</span><span class="s1">'A'</span><span class="p">,</span> <span class="s1">'B'</span><span class="p">,</span> <span class="s1">'C'</span><span class="p">]],</span> <span class="p">[[</span><span class="s1">'D'</span><span class="p">,</span> <span class="s1">'E'</span><span class="p">,</span> <span class="s1">'F'</span><span class="p">]]],</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">'lists'</span><span class="p">])</span>
 
 <span class="n">df</span>
 </pre></div>
@@ -2823,7 +2912,7 @@ dtype: float64</pre>
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">explode</span><span class="p">(</span><span class="s1">&#39;lists&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">explode</span><span class="p">(</span><span class="s1">'lists'</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -2896,9 +2985,13 @@ dtype: float64</pre>
 </div>
     
 
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Expand-Dataframe-based-on-a-Date-Range">Expand Dataframe based on a Date Range<a class="anchor-link" href="#Expand-Dataframe-based-on-a-Date-Range"> </a></h2><p>Expand Dataframe to range of Dates and fill values</p>
+<h2 id="Expand-Dataframe-based-on-a-Date-Range">
+<a class="anchor" href="#Expand-Dataframe-based-on-a-Date-Range" aria-hidden="true"><span class="octicon octicon-link"></span></a>Expand Dataframe based on a Date Range<a class="anchor-link" href="#Expand-Dataframe-based-on-a-Date-Range"> </a>
+</h2>
+<p>Expand Dataframe to range of Dates and fill values</p>
 
 </div>
 </div>
@@ -2911,12 +3004,12 @@ dtype: float64</pre>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
- <span class="s1">&#39;Date&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;2018-01-01&#39;</span><span class="p">,</span> <span class="s1">&#39;2018-01-03&#39;</span><span class="p">],</span>
- <span class="s1">&#39;Product&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">]</span>
+ <span class="s1">'Date'</span><span class="p">:</span> <span class="p">[</span><span class="s1">'2018-01-01'</span><span class="p">,</span> <span class="s1">'2018-01-03'</span><span class="p">],</span>
+ <span class="s1">'Product'</span><span class="p">:</span> <span class="p">[</span><span class="s1">'A'</span><span class="p">,</span> <span class="s1">'B'</span><span class="p">]</span>
  <span class="p">}</span>
 <span class="p">)</span>
 
-<span class="n">df</span><span class="p">[</span><span class="s1">&#39;Date&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;Date&#39;</span><span class="p">])</span>
+<span class="n">df</span><span class="p">[</span><span class="s1">'Date'</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">'Date'</span><span class="p">])</span>
 
 <span class="n">df</span>
 </pre></div>
@@ -2985,7 +3078,7 @@ dtype: float64</pre>
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">&#39;Date&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">'Date'</span><span class="p">)</span>
 
 <span class="n">df</span>
 </pre></div>
@@ -3072,7 +3165,7 @@ dtype: float64</pre>
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>DatetimeIndex([&#39;2018-01-01&#39;, &#39;2018-01-02&#39;, &#39;2018-01-03&#39;, &#39;2018-01-04&#39;], dtype=&#39;datetime64[ns]&#39;, freq=&#39;D&#39;)</pre>
+<pre>DatetimeIndex(['2018-01-01', '2018-01-02', '2018-01-03', '2018-01-04'], dtype='datetime64[ns]', freq='D')</pre>
 </div>
 
 </div>
@@ -3155,9 +3248,13 @@ dtype: float64</pre>
 </div>
     
 
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Wide-to-Long">Wide to Long<a class="anchor-link" href="#Wide-to-Long"> </a></h2><p>Similar to melt but can handle prefixed column names</p>
+<h2 id="Wide-to-Long">
+<a class="anchor" href="#Wide-to-Long" aria-hidden="true"><span class="octicon octicon-link"></span></a>Wide to Long<a class="anchor-link" href="#Wide-to-Long"> </a>
+</h2>
+<p>Similar to melt but can handle prefixed column names</p>
 <p><a href="https://stackoverflow.com/questions/58135102/pivot-tables-on-python">https://stackoverflow.com/questions/58135102/pivot-tables-on-python</a></p>
 
 </div>
@@ -3171,13 +3268,13 @@ dtype: float64</pre>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
-    <span class="p">{</span><span class="s1">&#39;date&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;1/1/11&#39;</span><span class="p">,</span> <span class="s1">&#39;2/1/11&#39;</span><span class="p">,</span> <span class="s1">&#39;3/1/11&#39;</span><span class="p">],</span>
-     <span class="s1">&#39;online_won&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">9</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span>
-     <span class="s1">&#39;retail_won&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">8</span><span class="p">],</span>
-     <span class="s1">&#39;outbound_won&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">11</span><span class="p">,</span> <span class="mi">13</span><span class="p">,</span> <span class="mi">14</span><span class="p">],</span>
-     <span class="s1">&#39;online_leads&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">12</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">17</span><span class="p">],</span>
-     <span class="s1">&#39;retail_leads&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">14.0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">],</span>
-     <span class="s1">&#39;outbound_leads&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">]}</span>
+    <span class="p">{</span><span class="s1">'date'</span><span class="p">:</span> <span class="p">[</span><span class="s1">'1/1/11'</span><span class="p">,</span> <span class="s1">'2/1/11'</span><span class="p">,</span> <span class="s1">'3/1/11'</span><span class="p">],</span>
+     <span class="s1">'online_won'</span><span class="p">:</span> <span class="p">[</span><span class="mi">9</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span>
+     <span class="s1">'retail_won'</span><span class="p">:</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">8</span><span class="p">],</span>
+     <span class="s1">'outbound_won'</span><span class="p">:</span> <span class="p">[</span><span class="mi">11</span><span class="p">,</span> <span class="mi">13</span><span class="p">,</span> <span class="mi">14</span><span class="p">],</span>
+     <span class="s1">'online_leads'</span><span class="p">:</span> <span class="p">[</span><span class="mi">12</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">17</span><span class="p">],</span>
+     <span class="s1">'retail_leads'</span><span class="p">:</span> <span class="p">[</span><span class="mf">14.0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">],</span>
+     <span class="s1">'outbound_leads'</span><span class="p">:</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">]}</span>
 <span class="p">)</span>
 
 <span class="n">df</span>
@@ -3272,7 +3369,7 @@ dtype: float64</pre>
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;_&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">)[::</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="p">]</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'_'</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">'_'</span><span class="p">)[::</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="p">]</span>
 
 <span class="n">df</span><span class="o">.</span><span class="n">columns</span>
 </pre></div>
@@ -3289,9 +3386,9 @@ dtype: float64</pre>
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>Index([&#39;date&#39;, &#39;won_online&#39;, &#39;won_retail&#39;, &#39;won_outbound&#39;, &#39;leads_online&#39;,
-       &#39;leads_retail&#39;, &#39;leads_outbound&#39;],
-      dtype=&#39;object&#39;)</pre>
+<pre>Index(['date', 'won_online', 'won_retail', 'won_outbound', 'leads_online',
+       'leads_retail', 'leads_outbound'],
+      dtype='object')</pre>
 </div>
 
 </div>
@@ -3309,7 +3406,7 @@ dtype: float64</pre>
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">wide_to_long</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;won&#39;</span><span class="p">,</span><span class="s1">&#39;leads&#39;</span><span class="p">],</span> <span class="s1">&#39;date&#39;</span><span class="p">,</span> <span class="s1">&#39;source&#39;</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;_&#39;</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="s1">&#39;\w+&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">wide_to_long</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="p">[</span><span class="s1">'won'</span><span class="p">,</span><span class="s1">'leads'</span><span class="p">],</span> <span class="s1">'date'</span><span class="p">,</span> <span class="s1">'source'</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">'_'</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="s1">'\w+'</span><span class="p">)</span>
 
 <span class="n">df</span>
 </pre></div>
@@ -3422,9 +3519,12 @@ dtype: float64</pre>
 </div>
     
 
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Rolling-Mean">Rolling Mean<a class="anchor-link" href="#Rolling-Mean"> </a></h2>
+<h2 id="Rolling-Mean">
+<a class="anchor" href="#Rolling-Mean" aria-hidden="true"><span class="octicon octicon-link"></span></a>Rolling Mean<a class="anchor-link" href="#Rolling-Mean"> </a>
+</h2>
 </div>
 </div>
 </div>
@@ -3556,9 +3656,13 @@ dtype: float64</pre>
 </div>
     
 
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Rank-Multiple-Columns">Rank Multiple Columns<a class="anchor-link" href="#Rank-Multiple-Columns"> </a></h2><p><a href="https://stackoverflow.com/questions/58136881/compute-rank-average-for-multiple-columns-manually">https://stackoverflow.com/questions/58136881/compute-rank-average-for-multiple-columns-manually</a></p>
+<h2 id="Rank-Multiple-Columns">
+<a class="anchor" href="#Rank-Multiple-Columns" aria-hidden="true"><span class="octicon octicon-link"></span></a>Rank Multiple Columns<a class="anchor-link" href="#Rank-Multiple-Columns"> </a>
+</h2>
+<p><a href="https://stackoverflow.com/questions/58136881/compute-rank-average-for-multiple-columns-manually">https://stackoverflow.com/questions/58136881/compute-rank-average-for-multiple-columns-manually</a></p>
 
 </div>
 </div>
@@ -3570,7 +3674,7 @@ dtype: float64</pre>
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;String&#39;</span><span class="p">:[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span><span class="s1">&#39;a&#39;</span><span class="p">,</span><span class="s1">&#39;a&#39;</span><span class="p">,</span><span class="s1">&#39;a&#39;</span><span class="p">,</span><span class="s1">&#39;b&#39;</span><span class="p">],</span><span class="s1">&#39;Integer&#39;</span><span class="p">:[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">]})</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s1">'String'</span><span class="p">:[</span><span class="s1">'a'</span><span class="p">,</span><span class="s1">'a'</span><span class="p">,</span><span class="s1">'a'</span><span class="p">,</span><span class="s1">'a'</span><span class="p">,</span><span class="s1">'b'</span><span class="p">],</span><span class="s1">'Integer'</span><span class="p">:[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">]})</span>
 
 <span class="n">df</span>
 </pre></div>
@@ -3654,7 +3758,7 @@ dtype: float64</pre>
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">([</span><span class="s1">&#39;String&#39;</span><span class="p">,</span><span class="s1">&#39;Integer&#39;</span><span class="p">],</span> <span class="n">ascending</span><span class="o">=</span><span class="p">[</span><span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">])</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">([</span><span class="s1">'String'</span><span class="p">,</span><span class="s1">'Integer'</span><span class="p">],</span> <span class="n">ascending</span><span class="o">=</span><span class="p">[</span><span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">])</span>
 
 <span class="n">df</span>
 </pre></div>
@@ -3738,7 +3842,7 @@ dtype: float64</pre>
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;rank&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">))</span> <span class="o">+</span> <span class="mi">1</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="p">[</span><span class="s1">'rank'</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">))</span> <span class="o">+</span> <span class="mi">1</span>
 
 <span class="n">df</span>
 </pre></div>
@@ -3828,7 +3932,7 @@ dtype: float64</pre>
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;rank&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s1">&#39;String&#39;</span><span class="p">,</span> <span class="s1">&#39;Integer&#39;</span><span class="p">])[</span><span class="s1">&#39;rank&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="s1">&#39;mean&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="p">[</span><span class="s1">'rank'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s1">'String'</span><span class="p">,</span> <span class="s1">'Integer'</span><span class="p">])[</span><span class="s1">'rank'</span><span class="p">]</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="s1">'mean'</span><span class="p">)</span>
 
 <span class="n">df</span>
 </pre></div>
@@ -3918,7 +4022,7 @@ dtype: float64</pre>
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;rank&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s1">&#39;String&#39;</span><span class="p">,</span> <span class="s1">&#39;Integer&#39;</span><span class="p">],</span> <span class="n">sort</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">ngroup</span><span class="p">()</span><span class="o">.</span><span class="n">rank</span><span class="p">()</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="p">[</span><span class="s1">'rank'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s1">'String'</span><span class="p">,</span> <span class="s1">'Integer'</span><span class="p">],</span> <span class="n">sort</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">ngroup</span><span class="p">()</span><span class="o">.</span><span class="n">rank</span><span class="p">()</span>
 
 <span class="n">df</span>
 </pre></div>
@@ -4001,9 +4105,13 @@ dtype: float64</pre>
 </div>
     
 
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Select-Dates-Ignoring-Year">Select Dates Ignoring Year<a class="anchor-link" href="#Select-Dates-Ignoring-Year"> </a></h2><p>Slice Dataframe between two dates ignoring years</p>
+<h2 id="Select-Dates-Ignoring-Year">
+<a class="anchor" href="#Select-Dates-Ignoring-Year" aria-hidden="true"><span class="octicon octicon-link"></span></a>Select Dates Ignoring Year<a class="anchor-link" href="#Select-Dates-Ignoring-Year"> </a>
+</h2>
+<p>Slice Dataframe between two dates ignoring years</p>
 <p><a href="https://stackoverflow.com/questions/58117659/select-rows-in-pandas-dataframe-between-dates-regardless-of-year">https://stackoverflow.com/questions/58117659/select-rows-in-pandas-dataframe-between-dates-regardless-of-year</a></p>
 
 </div>
@@ -4016,7 +4124,7 @@ dtype: float64</pre>
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;date&#39;</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">date_range</span><span class="p">(</span><span class="s1">&#39;2016-09-01&#39;</span><span class="p">,</span><span class="s1">&#39;2019-09-01&#39;</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="s1">&#39;D&#39;</span><span class="p">)})</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">'date'</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">date_range</span><span class="p">(</span><span class="s1">'2016-09-01'</span><span class="p">,</span><span class="s1">'2019-09-01'</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="s1">'D'</span><span class="p">)})</span>
 
 <span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
 </pre></div>
@@ -4094,7 +4202,7 @@ dtype: float64</pre>
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">s</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">date</span><span class="o">.</span><span class="n">dt</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%m</span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">s</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">date</span><span class="o">.</span><span class="n">dt</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">'%m</span><span class="si">%d</span><span class="s1">'</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
 
 <span class="n">s</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
 </pre></div>
@@ -4219,9 +4327,12 @@ Name: date, dtype: int32</pre>
 </div>
     
 
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Split-a-Dataframe-np.split">Split a Dataframe np.split<a class="anchor-link" href="#Split-a-Dataframe-np.split"> </a></h2>
+<h2 id="Split-a-Dataframe-np.split">
+<a class="anchor" href="#Split-a-Dataframe-np.split" aria-hidden="true"><span class="octicon octicon-link"></span></a>Split a Dataframe np.split<a class="anchor-link" href="#Split-a-Dataframe-np.split"> </a>
+</h2>
 </div>
 </div>
 </div>
@@ -4232,7 +4343,7 @@ Name: date, dtype: int32</pre>
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;A&#39;</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">10</span><span class="p">),</span> <span class="s1">&#39;B&#39;</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">10</span><span class="p">)})</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">'A'</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">10</span><span class="p">),</span> <span class="s1">'B'</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">10</span><span class="p">)})</span>
 
 <span class="n">df</span>
 </pre></div>
@@ -4609,9 +4720,13 @@ Name: date, dtype: int32</pre>
 </div>
     
 
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Apply-function-with-multiple-arguments">Apply function with multiple arguments<a class="anchor-link" href="#Apply-function-with-multiple-arguments"> </a></h2><p><a href="https://stackoverflow.com/questions/58089770/using-apply-function-dataframe">https://stackoverflow.com/questions/58089770/using-apply-function-dataframe</a></p>
+<h2 id="Apply-function-with-multiple-arguments">
+<a class="anchor" href="#Apply-function-with-multiple-arguments" aria-hidden="true"><span class="octicon octicon-link"></span></a>Apply function with multiple arguments<a class="anchor-link" href="#Apply-function-with-multiple-arguments"> </a>
+</h2>
+<p><a href="https://stackoverflow.com/questions/58089770/using-apply-function-dataframe">https://stackoverflow.com/questions/58089770/using-apply-function-dataframe</a></p>
 
 </div>
 </div>
@@ -4631,7 +4746,7 @@ Name: date, dtype: int32</pre>
 <span class="n">z</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mf">0.10488</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.10490</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.10492</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.10495</span><span class="p">]</span>
 <span class="n">w</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mf">0.10597</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.10597</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.10597</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.10596</span><span class="p">]</span>
 
-<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">w</span><span class="p">],</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="s1">&#39;z&#39;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">])</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">w</span><span class="p">],</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">'x'</span><span class="p">,</span> <span class="s1">'y'</span><span class="p">,</span> <span class="s1">'z'</span><span class="p">,</span> <span class="s1">'w'</span><span class="p">])</span>
 
 <span class="n">df</span>
 </pre></div>
@@ -4728,7 +4843,7 @@ Name: date, dtype: int32</pre>
     
     <span class="k">return</span> <span class="n">roll</span> <span class="o">*</span> <span class="n">var</span>
 
-<span class="n">df</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span> <span class="p">:</span> <span class="n">roll</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="s1">&#39;w&#39;</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="s1">&#39;z&#39;</span><span class="p">],</span> <span class="mi">20</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">df</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span> <span class="p">:</span> <span class="n">roll</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="s1">'w'</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="s1">'x'</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="s1">'y'</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="s1">'z'</span><span class="p">],</span> <span class="mi">20</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -4802,9 +4917,13 @@ dtype: float64</pre>
 </div>
     
 
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Custom-Styling">Custom Styling<a class="anchor-link" href="#Custom-Styling"> </a></h2><p><a href="https://stackoverflow.com/questions/58087857/applying-pandas-styles-to-arbitrary-non-product-subsets-of-a-dataframe">https://stackoverflow.com/questions/58087857/applying-pandas-styles-to-arbitrary-non-product-subsets-of-a-dataframe</a></p>
+<h2 id="Custom-Styling">
+<a class="anchor" href="#Custom-Styling" aria-hidden="true"><span class="octicon octicon-link"></span></a>Custom Styling<a class="anchor-link" href="#Custom-Styling"> </a>
+</h2>
+<p><a href="https://stackoverflow.com/questions/58087857/applying-pandas-styles-to-arbitrary-non-product-subsets-of-a-dataframe">https://stackoverflow.com/questions/58087857/applying-pandas-styles-to-arbitrary-non-product-subsets-of-a-dataframe</a></p>
 
 </div>
 </div>
@@ -4816,7 +4935,7 @@ dtype: float64</pre>
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;A&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">],</span> <span class="s1">&#39;B&#39;</span><span class="p">:</span> <span class="p">[</span><span class="o">.</span><span class="mi">5</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;C&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]})</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s1">'A'</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">],</span> <span class="s1">'B'</span><span class="p">:</span> <span class="p">[</span><span class="o">.</span><span class="mi">5</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="s1">'C'</span><span class="p">:</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]})</span>
 
 <span class="n">df</span>
 </pre></div>
@@ -4895,18 +5014,18 @@ dtype: float64</pre>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">matplotlib.cm</span> <span class="kn">import</span> <span class="n">get_cmap</span>
-<span class="n">cmap</span> <span class="o">=</span> <span class="n">get_cmap</span><span class="p">(</span><span class="s1">&#39;PuBu&#39;</span><span class="p">)</span>
+<span class="n">cmap</span> <span class="o">=</span> <span class="n">get_cmap</span><span class="p">(</span><span class="s1">'PuBu'</span><span class="p">)</span>
 
 <span class="c1"># update with low-high option</span>
 <span class="k">def</span> <span class="nf">threshold</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">low</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">high</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">mid</span><span class="o">=</span><span class="mf">0.5</span><span class="p">):</span>
     <span class="c1"># nan cell</span>
-    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">x</span><span class="p">):</span> <span class="k">return</span> <span class="s1">&#39;&#39;</span>
+    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">x</span><span class="p">):</span> <span class="k">return</span> <span class="s1">''</span>
 
     <span class="c1"># non-nan cell</span>
     <span class="n">x</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span><span class="o">-</span><span class="n">low</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">high</span><span class="o">-</span><span class="n">low</span><span class="p">)</span>
-    <span class="n">background</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;background-color: rgba</span><span class="si">{</span><span class="n">cmap</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">bytes</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span>
-    <span class="n">text_color</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;color: white&#39;</span> <span class="k">if</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="n">mid</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span>
-    <span class="k">return</span> <span class="n">background</span><span class="o">+</span><span class="s1">&#39;;&#39;</span><span class="o">+</span><span class="n">text_color</span>
+    <span class="n">background</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'background-color: rgba</span><span class="si">{</span><span class="n">cmap</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">bytes</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="si">}</span><span class="s1">'</span>
+    <span class="n">text_color</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'color: white'</span> <span class="k">if</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="n">mid</span> <span class="k">else</span> <span class="s1">''</span>
+    <span class="k">return</span> <span class="n">background</span><span class="o">+</span><span class="s1">';'</span><span class="o">+</span><span class="n">text_color</span>
 
 <span class="c1"># apply the style</span>
 <span class="n">df</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">applymap</span><span class="p">(</span><span class="n">threshold</span><span class="p">,</span> <span class="n">low</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">high</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">mid</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
@@ -4942,7 +5061,11 @@ dtype: float64</pre>
         }    #T_1bece12e_f60b_11e9_b9ab_408d5c51b0earow2_col2 {
             background-color:  rgba(2, 56, 88, 255);
             color:  white;
-        }</style><table id="T_1bece12e_f60b_11e9_b9ab_408d5c51b0ea"><thead>    <tr>        <th class="blank level0"></th>        <th class="col_heading level0 col0">A</th>        <th class="col_heading level0 col1">B</th>        <th class="col_heading level0 col2">C</th>    </tr></thead><tbody>
+        }</style>
+<table id="T_1bece12e_f60b_11e9_b9ab_408d5c51b0ea">
+<thead>    <tr>        <th class="blank level0"></th>        <th class="col_heading level0 col0">A</th>        <th class="col_heading level0 col1">B</th>        <th class="col_heading level0 col2">C</th>    </tr>
+</thead>
+<tbody>
                 <tr>
                         <th id="T_1bece12e_f60b_11e9_b9ab_408d5c51b0ealevel0_row0" class="row_heading level0 row0">0</th>
                         <td id="T_1bece12e_f60b_11e9_b9ab_408d5c51b0earow0_col0" class="data row0 col0">0</td>
@@ -4961,7 +5084,8 @@ dtype: float64</pre>
                         <td id="T_1bece12e_f60b_11e9_b9ab_408d5c51b0earow2_col1" class="data row2 col1">0</td>
                         <td id="T_1bece12e_f60b_11e9_b9ab_408d5c51b0earow2_col2" class="data row2 col2">1</td>
             </tr>
-    </tbody></table>
+    </tbody>
+</table>
 </div>
 
 </div>
@@ -4972,9 +5096,13 @@ dtype: float64</pre>
 </div>
     
 
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Reverse-an-Array">Reverse an Array<a class="anchor-link" href="#Reverse-an-Array"> </a></h2><p><a href="https://stackoverflow.com/questions/6771428/most-efficient-way-to-reverse-a-numpy-array">https://stackoverflow.com/questions/6771428/most-efficient-way-to-reverse-a-numpy-array</a></p>
+<h2 id="Reverse-an-Array">
+<a class="anchor" href="#Reverse-an-Array" aria-hidden="true"><span class="octicon octicon-link"></span></a>Reverse an Array<a class="anchor-link" href="#Reverse-an-Array"> </a>
+</h2>
+<p><a href="https://stackoverflow.com/questions/6771428/most-efficient-way-to-reverse-a-numpy-array">https://stackoverflow.com/questions/6771428/most-efficient-way-to-reverse-a-numpy-array</a></p>
 
 </div>
 </div>
@@ -5115,9 +5243,13 @@ dtype: float64</pre>
 </div>
     
 
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Symmetric-difference">Symmetric difference<a class="anchor-link" href="#Symmetric-difference"> </a></h2><p>Values not common to both</p>
+<h2 id="Symmetric-difference">
+<a class="anchor" href="#Symmetric-difference" aria-hidden="true"><span class="octicon octicon-link"></span></a>Symmetric difference<a class="anchor-link" href="#Symmetric-difference"> </a>
+</h2>
+<p>Values not common to both</p>
 <p><a href="https://stackoverflow.com/questions/45845965/python-compare-two-columns-of-features-return-values-which-are-not-common-to">https://stackoverflow.com/questions/45845965/python-compare-two-columns-of-features-return-values-which-are-not-common-to</a></p>
 
 </div>
@@ -5130,7 +5262,7 @@ dtype: float64</pre>
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df1</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;a&#39;</span><span class="p">:[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">,</span> <span class="s1">&#39;l&#39;</span><span class="p">,</span> <span class="s1">&#39;z&#39;</span><span class="p">]})</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df1</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">'a'</span><span class="p">:[</span><span class="s1">'a'</span><span class="p">,</span> <span class="s1">'b'</span><span class="p">,</span> <span class="s1">'c'</span><span class="p">,</span> <span class="s1">'x'</span><span class="p">,</span> <span class="s1">'d'</span><span class="p">,</span> <span class="s1">'l'</span><span class="p">,</span> <span class="s1">'z'</span><span class="p">]})</span>
 
 <span class="n">df1</span>
 </pre></div>
@@ -5216,7 +5348,7 @@ dtype: float64</pre>
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df2</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">]})</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df2</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">'b'</span><span class="p">:</span> <span class="p">[</span><span class="s1">'b'</span><span class="p">,</span> <span class="s1">'a'</span><span class="p">,</span> <span class="s1">'d'</span><span class="p">,</span> <span class="s1">'c'</span><span class="p">,</span> <span class="s1">'y'</span><span class="p">]})</span>
 
 <span class="n">df2</span>
 </pre></div>
@@ -5309,7 +5441,7 @@ dtype: float64</pre>
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>array([&#39;l&#39;, &#39;x&#39;, &#39;y&#39;, &#39;z&#39;], dtype=object)</pre>
+<pre>array(['l', 'x', 'y', 'z'], dtype=object)</pre>
 </div>
 
 </div>
@@ -5342,7 +5474,7 @@ dtype: float64</pre>
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>array([&#39;l&#39;, &#39;x&#39;, &#39;y&#39;, &#39;z&#39;], dtype=object)</pre>
+<pre>array(['l', 'x', 'y', 'z'], dtype=object)</pre>
 </div>
 
 </div>
@@ -5353,9 +5485,13 @@ dtype: float64</pre>
 </div>
     
 
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Transpose-a-3D-array">Transpose a 3D array<a class="anchor-link" href="#Transpose-a-3D-array"> </a></h2><p><a href="https://stackoverflow.com/questions/32034237/how-does-numpys-transpose-method-permute-the-axes-of-an-array">https://stackoverflow.com/questions/32034237/how-does-numpys-transpose-method-permute-the-axes-of-an-array</a></p>
+<h2 id="Transpose-a-3D-array">
+<a class="anchor" href="#Transpose-a-3D-array" aria-hidden="true"><span class="octicon octicon-link"></span></a>Transpose a 3D array<a class="anchor-link" href="#Transpose-a-3D-array"> </a>
+</h2>
+<p><a href="https://stackoverflow.com/questions/32034237/how-does-numpys-transpose-method-permute-the-axes-of-an-array">https://stackoverflow.com/questions/32034237/how-does-numpys-transpose-method-permute-the-axes-of-an-array</a></p>
 
 </div>
 </div>
@@ -5434,9 +5570,13 @@ dtype: float64</pre>
 </div>
     
 
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="literal-eval">literal eval<a class="anchor-link" href="#literal-eval"> </a></h2><p>Convert a string representation of a list into a list</p>
+<h2 id="literal-eval">
+<a class="anchor" href="#literal-eval" aria-hidden="true"><span class="octicon octicon-link"></span></a>literal eval<a class="anchor-link" href="#literal-eval"> </a>
+</h2>
+<p>Convert a string representation of a list into a list</p>
 <p><a href="https://stackoverflow.com/questions/23111990/pandas-dataframe-stored-list-as-string-how-to-convert-back-to-list">https://stackoverflow.com/questions/23111990/pandas-dataframe-stored-list-as-string-how-to-convert-back-to-list</a></p>
 
 </div>
@@ -5451,7 +5591,7 @@ dtype: float64</pre>
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">ast</span> <span class="kn">import</span> <span class="n">literal_eval</span>
 
-<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;list&#39;</span><span class="p">:[</span><span class="s1">&#39;[1,2,3]&#39;</span><span class="p">,</span> <span class="s1">&#39;[5,6,7]&#39;</span><span class="p">]})</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">'list'</span><span class="p">:[</span><span class="s1">'[1,2,3]'</span><span class="p">,</span> <span class="s1">'[5,6,7]'</span><span class="p">]})</span>
 
 <span class="n">df</span>
 </pre></div>
@@ -5532,8 +5672,8 @@ dtype: float64</pre>
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>0    &lt;class &#39;str&#39;&gt;
-1    &lt;class &#39;str&#39;&gt;
+<pre>0    &lt;class 'str'&gt;
+1    &lt;class 'str'&gt;
 Name: list, dtype: object</pre>
 </div>
 
@@ -5567,8 +5707,8 @@ Name: list, dtype: object</pre>
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>0    &lt;class &#39;list&#39;&gt;
-1    &lt;class &#39;list&#39;&gt;
+<pre>0    &lt;class 'list'&gt;
+1    &lt;class 'list'&gt;
 Name: list, dtype: object</pre>
 </div>
 
@@ -5580,16 +5720,23 @@ Name: list, dtype: object</pre>
 </div>
     
 
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Difference-between-Nan-and-None">Difference between Nan and None<a class="anchor-link" href="#Difference-between-Nan-and-None"> </a></h2><p><a href="https://stackoverflow.com/questions/17534106/what-is-the-difference-between-nan-and-none">https://stackoverflow.com/questions/17534106/what-is-the-difference-between-nan-and-none</a></p>
+<h2 id="Difference-between-Nan-and-None">
+<a class="anchor" href="#Difference-between-Nan-and-None" aria-hidden="true"><span class="octicon octicon-link"></span></a>Difference between Nan and None<a class="anchor-link" href="#Difference-between-Nan-and-None"> </a>
+</h2>
+<p><a href="https://stackoverflow.com/questions/17534106/what-is-the-difference-between-nan-and-none">https://stackoverflow.com/questions/17534106/what-is-the-difference-between-nan-and-none</a></p>
 
 </div>
 </div>
 </div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="str-accessor">str accessor<a class="anchor-link" href="#str-accessor"> </a></h2>
+<h2 id="str-accessor">
+<a class="anchor" href="#str-accessor" aria-hidden="true"><span class="octicon octicon-link"></span></a>str accessor<a class="anchor-link" href="#str-accessor"> </a>
+</h2>
 </div>
 </div>
 </div>
@@ -5600,7 +5747,7 @@ Name: list, dtype: object</pre>
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">s</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">([</span><span class="s1">&#39;ABC&#39;</span><span class="p">,</span><span class="s1">&#39;DEF&#39;</span><span class="p">])</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">s</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">([</span><span class="s1">'ABC'</span><span class="p">,</span><span class="s1">'DEF'</span><span class="p">])</span>
 
 <span class="n">s</span>
 </pre></div>
@@ -5637,7 +5784,7 @@ dtype: object</pre>
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">s</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s1">&#39;A&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">s</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s1">'A'</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -5672,7 +5819,7 @@ dtype: bool</pre>
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">s</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s1">&#39;A|E&#39;</span><span class="p">)</span>  <span class="c1"># A or E</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">s</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s1">'A|E'</span><span class="p">)</span>  <span class="c1"># A or E</span>
 </pre></div>
 
     </div>
@@ -5770,16 +5917,23 @@ dtype: object</pre>
 </div>
     
 
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Regular-Expression">Regular Expression<a class="anchor-link" href="#Regular-Expression"> </a></h2><p><a href="https://stackoverflow.com/questions/4736/learning-regular-expressions">https://stackoverflow.com/questions/4736/learning-regular-expressions</a></p>
+<h2 id="Regular-Expression">
+<a class="anchor" href="#Regular-Expression" aria-hidden="true"><span class="octicon octicon-link"></span></a>Regular Expression<a class="anchor-link" href="#Regular-Expression"> </a>
+</h2>
+<p><a href="https://stackoverflow.com/questions/4736/learning-regular-expressions">https://stackoverflow.com/questions/4736/learning-regular-expressions</a></p>
 
 </div>
 </div>
 </div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Cartesian-Product">Cartesian Product<a class="anchor-link" href="#Cartesian-Product"> </a></h2>
+<h2 id="Cartesian-Product">
+<a class="anchor" href="#Cartesian-Product" aria-hidden="true"><span class="octicon octicon-link"></span></a>Cartesian Product<a class="anchor-link" href="#Cartesian-Product"> </a>
+</h2>
 </div>
 </div>
 </div>
@@ -5790,8 +5944,8 @@ dtype: object</pre>
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_A</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;A&#39;</span><span class="p">:[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]})</span>
-<span class="n">df_B</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;B&#39;</span><span class="p">:[</span><span class="s1">&#39;A&#39;</span><span class="p">,</span><span class="s1">&#39;B&#39;</span><span class="p">,</span><span class="s1">&#39;C&#39;</span><span class="p">]})</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_A</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">'A'</span><span class="p">:[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]})</span>
+<span class="n">df_B</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">'B'</span><span class="p">:[</span><span class="s1">'A'</span><span class="p">,</span><span class="s1">'B'</span><span class="p">,</span><span class="s1">'C'</span><span class="p">]})</span>
 </pre></div>
 
     </div>
@@ -5944,7 +6098,7 @@ dtype: object</pre>
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_A</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">df_B</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="n">on</span><span class="o">=</span><span class="s1">&#39;key&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s1">&#39;key&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_A</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">df_B</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="n">on</span><span class="o">=</span><span class="s1">'key'</span><span class="p">)</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s1">'key'</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -6039,9 +6193,13 @@ dtype: object</pre>
 </div>
     
 
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="to_frame">to_frame<a class="anchor-link" href="#to_frame"> </a></h2><p>Maintain a Dataframe Object</p>
+<h2 id="to_frame">
+<a class="anchor" href="#to_frame" aria-hidden="true"><span class="octicon octicon-link"></span></a>to_frame<a class="anchor-link" href="#to_frame"> </a>
+</h2>
+<p>Maintain a Dataframe Object</p>
 
 </div>
 </div>
@@ -6053,7 +6211,7 @@ dtype: object</pre>
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;A&#39;</span><span class="p">:[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]})</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">'A'</span><span class="p">:[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]})</span>
 
 <span class="n">df</span>
 </pre></div>
@@ -6172,7 +6330,7 @@ Name: A, dtype: int64</pre>
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>&lt;class &#39;pandas.core.series.Series&#39;&gt;
+<pre>&lt;class 'pandas.core.series.Series'&gt;
 </pre>
 </div>
 </div>
@@ -6284,9 +6442,12 @@ Name: A, dtype: int64</pre>
 </div>
     
 
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Date-Manipulation">Date Manipulation<a class="anchor-link" href="#Date-Manipulation"> </a></h2>
+<h2 id="Date-Manipulation">
+<a class="anchor" href="#Date-Manipulation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Date Manipulation<a class="anchor-link" href="#Date-Manipulation"> </a>
+</h2>
 </div>
 </div>
 </div>
@@ -6297,7 +6458,7 @@ Name: A, dtype: int64</pre>
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">dates</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">([</span><span class="s1">&#39;1/1/2016&#39;</span><span class="p">,</span> <span class="s1">&#39;12/15/2017&#39;</span><span class="p">,</span> <span class="s1">&#39;10/31/2019&#39;</span><span class="p">]))</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">dates</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">([</span><span class="s1">'1/1/2016'</span><span class="p">,</span> <span class="s1">'12/15/2017'</span><span class="p">,</span> <span class="s1">'10/31/2019'</span><span class="p">]))</span>
 
 <span class="n">dates</span>
 </pre></div>
@@ -6481,9 +6642,13 @@ dtype: object</pre>
 </div>
     
 
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Total-Seconds">Total Seconds<a class="anchor-link" href="#Total-Seconds"> </a></h2><p>Calculate total seconds between to datetimes</p>
+<h2 id="Total-Seconds">
+<a class="anchor" href="#Total-Seconds" aria-hidden="true"><span class="octicon octicon-link"></span></a>Total Seconds<a class="anchor-link" href="#Total-Seconds"> </a>
+</h2>
+<p>Calculate total seconds between to datetimes</p>
 
 </div>
 </div>
@@ -6495,7 +6660,7 @@ dtype: object</pre>
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="s1">&#39;1/5/2019 00:01:35&#39;</span><span class="p">)</span> <span class="o">-</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="s1">&#39;1/1/2019 00:05:00&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">seconds</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="s1">'1/5/2019 00:01:35'</span><span class="p">)</span> <span class="o">-</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="s1">'1/1/2019 00:05:00'</span><span class="p">))</span><span class="o">.</span><span class="n">seconds</span>
 </pre></div>
 
     </div>
@@ -6528,7 +6693,7 @@ dtype: object</pre>
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="s1">&#39;1/5/2019 00:01:35&#39;</span><span class="p">)</span> <span class="o">-</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="s1">&#39;1/1/2019 00:05:00&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">()</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="s1">'1/5/2019 00:01:35'</span><span class="p">)</span> <span class="o">-</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="s1">'1/1/2019 00:05:00'</span><span class="p">))</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">()</span>
 </pre></div>
 
     </div>
@@ -6558,7 +6723,15 @@ dtype: object</pre>
 
 
 
-  </div><a class="u-url" href="/blog/2020/10/18/stack-overflow-tips-and-tricks.html" hidden></a>
+  </div><!-- from https://github.com/utterance/utterances -->
+<script src="https://utteranc.es/client.js"
+        repo="gardnmi/blog"
+        issue-term="title"
+        label="blogpost-comment"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script><a class="u-url" href="/blog/jupyter/2020/10/18/stack-overflow-tips-and-tricks.html" hidden></a>
 </article>
       </div>
     </main><footer class="site-footer h-card">
