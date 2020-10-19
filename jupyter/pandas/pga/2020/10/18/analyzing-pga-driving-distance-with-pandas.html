@@ -135,6 +135,9 @@ window.onload = wrap_img;
     
     
 <div class="cell border-box-sizing code_cell rendered">
+<details class="description">
+      <summary class="btn btn-sm" data-open="Hide Code" data-close="Show Code"></summary>
+        <p></p>
 <div class="input">
 
 <div class="inner_cell">
@@ -147,6 +150,7 @@ window.onload = wrap_img;
 </div>
 </div>
 
+    </details>
 </div>
     
 
@@ -358,11 +362,15 @@ Name: AVG., dtype: float64</pre>
     
     
 <div class="cell border-box-sizing code_cell rendered">
+<details class="description">
+      <summary class="btn btn-sm" data-open="Hide Code" data-close="Show Code"></summary>
+        <p></p>
 <div class="input">
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">years</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">date_range</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="s1">'1/1/1980'</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="s1">'today'</span><span class="p">)</span> <span class="o">+</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Create a List of Years</span>
+<span class="n">years</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">date_range</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="s1">'1/1/1980'</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="s1">'today'</span><span class="p">)</span> <span class="o">+</span>
                       <span class="n">pd</span><span class="o">.</span><span class="n">offsets</span><span class="o">.</span><span class="n">DateOffset</span><span class="p">(</span><span class="n">month</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">day</span><span class="o">=</span><span class="mi">31</span><span class="p">),</span> <span class="n">freq</span><span class="o">=</span><span class="s1">'Y'</span><span class="p">)</span><span class="o">.</span><span class="n">year</span>
 
 <span class="c1"># Loop Through URL's and create a Dataframe</span>
@@ -387,17 +395,22 @@ Name: AVG., dtype: float64</pre>
 </div>
 </div>
 
+    </details>
 </div>
     
 
     
     
 <div class="cell border-box-sizing code_cell rendered">
+<details class="description">
+      <summary class="btn btn-sm" data-open="Hide Code" data-close="Show Code"></summary>
+        <p></p>
 <div class="input">
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">nearest</span> <span class="o">=</span> <span class="n">alt</span><span class="o">.</span><span class="n">selection</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="s1">'single'</span><span class="p">,</span> <span class="n">nearest</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s1">'mouseover'</span><span class="p">,</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Create a selection that chooses the nearest point &amp; selects based on x-value</span>
+<span class="n">nearest</span> <span class="o">=</span> <span class="n">alt</span><span class="o">.</span><span class="n">selection</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="s1">'single'</span><span class="p">,</span> <span class="n">nearest</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s1">'mouseover'</span><span class="p">,</span>
                         <span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s1">'Year'</span><span class="p">],</span> <span class="n">empty</span><span class="o">=</span><span class="s1">'none'</span><span class="p">)</span>
 
 <span class="c1"># The basic line</span>
@@ -444,6 +457,7 @@ Name: AVG., dtype: float64</pre>
 </div>
 </div>
 
+    </details>
 <div class="output_wrapper">
 <div class="output">
 
