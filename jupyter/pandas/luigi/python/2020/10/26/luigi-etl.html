@@ -1,0 +1,1878 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="twitter:card" content="summary_large_image" /><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Luigi ETL | //gardnmi</title>
+<meta name="generator" content="Jekyll v4.1.1" />
+<meta property="og:title" content="Luigi ETL" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="The getting started docs are a head scratcher. Let’s explore the package together." />
+<meta property="og:description" content="The getting started docs are a head scratcher. Let’s explore the package together." />
+<link rel="canonical" href="https://gardnmi.github.io/blog/jupyter/pandas/luigi/python/2020/10/26/luigi-etl.html" />
+<meta property="og:url" content="https://gardnmi.github.io/blog/jupyter/pandas/luigi/python/2020/10/26/luigi-etl.html" />
+<meta property="og:site_name" content="//gardnmi" />
+<meta property="og:image" content="https://gardnmi.github.io/blog/images/undraw_old_day.svg" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-10-26T00:00:00-05:00" />
+<script type="application/ld+json">
+{"description":"The getting started docs are a head scratcher. Let’s explore the package together.","url":"https://gardnmi.github.io/blog/jupyter/pandas/luigi/python/2020/10/26/luigi-etl.html","@type":"BlogPosting","headline":"Luigi ETL","dateModified":"2020-10-26T00:00:00-05:00","datePublished":"2020-10-26T00:00:00-05:00","image":"https://gardnmi.github.io/blog/images/undraw_old_day.svg","mainEntityOfPage":{"@type":"WebPage","@id":"https://gardnmi.github.io/blog/jupyter/pandas/luigi/python/2020/10/26/luigi-etl.html"},"@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/blog/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="https://gardnmi.github.io/blog/feed.xml" title="//gardnmi" /><link rel="shortcut icon" type="image/x-icon" href="/blog/images/favicon.ico"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Primer/15.2.0/primer.css" integrity="sha512-xTz2ys4coGAOz8vuV1NcQBkgVmKhsSEtjbqyMJbBHRplFuvKIUo6xhLHpAyPt9mfR6twHJgn9OgVLuqOvjeBhg==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSriVlkMXe40PTKnXrLnZ9+fkDaog==" crossorigin="anonymous" />
+
+<script>
+function wrap_img(fn) {
+    if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading") {
+        var elements = document.querySelectorAll(".post img");
+        Array.prototype.forEach.call(elements, function(el, i) {
+            if (el.getAttribute("title") && (el.className != "emoji")) {
+                const caption = document.createElement('figcaption');
+                var node = document.createTextNode(el.getAttribute("title"));
+                caption.appendChild(node);
+                const wrapper = document.createElement('figure');
+                wrapper.className = 'image';
+                el.parentNode.insertBefore(wrapper, el);
+                el.parentNode.removeChild(el);
+                wrapper.appendChild(el);
+                wrapper.appendChild(caption);
+            }
+        });
+    } else { document.addEventListener('DOMContentLoaded', fn); }
+}
+window.onload = wrap_img;
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function(){
+    // add link icon to anchor tags
+    var elem = document.querySelectorAll(".anchor-link")
+    elem.forEach(e => (e.innerHTML = '<i class="fas fa-link fa-xs"></i>'));
+    });
+</script>
+</head>
+<body><header class="site-header">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/blog/">//gardnmi</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/blog/about/">About Me</a><a class="page-link" href="/blog/search/">Search</a><a class="page-link" href="/blog/categories/">Tags</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Luigi ETL</h1><p class="page-description">The getting started docs are a head scratcher.  Let's explore the package together.</p><p class="post-meta post-meta-title"><time class="dt-published" datetime="2020-10-26T00:00:00-05:00" itemprop="datePublished">
+        Oct 26, 2020
+      </time>
+       • <span class="read-time" title="Estimated read time">
+    
+    
+      24 min read
+    
+</span></p>
+
+    
+      <p class="category-tags"><i class="fas fa-tags category-tags-icon"></i></i> 
+      
+        <a class="category-tags-link" href="/blog/categories/#jupyter">jupyter</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/blog/categories/#pandas">pandas</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/blog/categories/#luigi">luigi</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/blog/categories/#python">python</a>
+        
+      
+      </p>
+    
+
+    
+      
+        <div class="pb-5 d-flex flex-wrap flex-justify-end">
+          <div class="px-2">
+
+    <a href="https://github.com/gardnmi/blog/tree/master/_notebooks/2020-10-26-luigi-etl.ipynb" role="button" target="_blank">
+<img class="notebook-badge-image" src="/blog/assets/badges/github.svg" alt="View On GitHub">
+    </a>
+</div>
+
+          <div class="px-2">
+    <a href="https://mybinder.org/v2/gh/gardnmi/blog/master?filepath=_notebooks%2F2020-10-26-luigi-etl.ipynb" target="_blank">
+        <img class="notebook-badge-image" src="/blog/assets/badges/binder.svg" alt="Open In Binder"/>
+    </a>
+</div>
+
+          <div class="px-2">
+    <a href="https://colab.research.google.com/github/gardnmi/blog/blob/master/_notebooks/2020-10-26-luigi-etl.ipynb" target="_blank">
+        <img class="notebook-badge-image" src="/blog/assets/badges/colab.svg" alt="Open In Colab"/>
+    </a>
+</div>
+        </div>
+      </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <ul class="section-nav">
+<li class="toc-entry toc-h2"><a href="#About">About </a></li>
+<li class="toc-entry toc-h2"><a href="#Task-Execution">Task Execution </a></li>
+<li class="toc-entry toc-h2"><a href="#How-are-Tasks-linked?">How are Tasks linked? </a></li>
+<li class="toc-entry toc-h2"><a href="#What-defines-a-completed-Task?">What defines a completed Task? </a></li>
+<li class="toc-entry toc-h2"><a href="#Coding-Demonstration-of-Task-Execution">Coding Demonstration of Task Execution </a></li>
+<li class="toc-entry toc-h2"><a href="#Luigi-Paramaters">Luigi Paramaters </a></li>
+<li class="toc-entry toc-h2"><a href="#External-Tasks">External Tasks </a></li>
+<li class="toc-entry toc-h2"><a href="#Alternate-Complete-Method">Alternate Complete Method </a></li>
+<li class="toc-entry toc-h2"><a href="#SQL-Tasks">SQL Tasks </a></li>
+<li class="toc-entry toc-h2"><a href="#Resources">Resources </a></li>
+</ul><!--
+#################################################
+### THIS FILE WAS AUTOGENERATED! DO NOT EDIT! ###
+#################################################
+# file to edit: _notebooks/2020-10-26-luigi-etl.ipynb
+-->
+
+<div class="container" id="notebook-container">
+        
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="About">
+<a class="anchor" href="#About" aria-hidden="true"><span class="octicon octicon-link"></span></a>About<a class="anchor-link" href="#About"> </a>
+</h2>
+<p>Luigi is a python ETL framework built by Spotify.  I use pandas in my day-to-day job and have created numerous pipeline tasks to move, transform, and analyze data across my organization.  I thought Luigi would be a great addition to help manage these pipelines, but after reading their getting started documentation, it left me scratching my head.</p>
+<p>If you are reading this, then I assume the docs have you confused as well, and hopefully, my post below can provide you with a bit more clarity.  The post assumes you have already read the docs. If you haven't, please read that first before continuing.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Task-Execution">
+<a class="anchor" href="#Task-Execution" aria-hidden="true"><span class="octicon octicon-link"></span></a>Task Execution<a class="anchor-link" href="#Task-Execution"> </a>
+</h2>
+<p>Typical ETL Execution:</p>
+<blockquote>
+<p>Task A $\longrightarrow$ Task B $\longrightarrow$ Task C</p>
+</blockquote>
+<p>Luig ETL Execution:&gt; Task A $\longleftarrow$ Task B $\longleftarrow$ Task C
+The most important thing to understand about Luigi is that it executes the ETL backward (recursively).  It checks first to see if the current task (Task C) is completed.  If not, it will then move backward to check if the previous task is completed (Task B).  Once it finds the first completed task, it will then begin to execute the Tasks moving forward again.</p>
+<p>This approach can save you a lot of time in your ETL.  The reason is that you won't re-run completed tasks.  However, this makes it a bit trickier to implement because you can find yourself in a situation where Task B or Task C will always return that they are complete, and Task A will never run again.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="How-are-Tasks-linked?">
+<a class="anchor" href="#How-are-Tasks-linked?" aria-hidden="true"><span class="octicon octicon-link"></span></a>How are Tasks linked?<a class="anchor-link" href="#How-are-Tasks-linked?"> </a>
+</h2>
+<blockquote>
+<p>Task A $\longleftarrow$ Task B $\longleftarrow$ Task C</p>
+</blockquote>
+<p>Except for External Tasks, most other tasks are dependent on another Luigi Task. The way you define this dependency is by defining a <code>requires()</code> method in the Task Class and defining those dependent tasks(s).  If the task is complete, it won't bother to check the dependent task(s).</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="What-defines-a-completed-Task?">
+<a class="anchor" href="#What-defines-a-completed-Task?" aria-hidden="true"><span class="octicon octicon-link"></span></a>What defines a completed Task?<a class="anchor-link" href="#What-defines-a-completed-Task?"> </a>
+</h2>
+<p>Luigi considers a Task completed when the Task output exists.  So if Task A outputs <code>task_a.csv</code> and it exists, then Task A will be considered complete.  What the getting started docs fail to mention is that in reality, Task A is complete when Task A's method <code>complete()</code> returns <code>True</code>.  The <code>complete()</code> method default behavior is to check if the output exists. We can override this behavior, and I would probably bet most do that have deployed Luigi into production.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Coding-Demonstration-of-Task-Execution">
+<a class="anchor" href="#Coding-Demonstration-of-Task-Execution" aria-hidden="true"><span class="octicon octicon-link"></span></a>Coding Demonstration of Task Execution<a class="anchor-link" href="#Coding-Demonstration-of-Task-Execution"> </a>
+</h2>
+<blockquote>
+<p>Task A $\longleftarrow$ Task B</p>
+</blockquote>
+<p>The below code is an example of how to set up a Luigi Task.  We have two classes, <code>Task_A</code> and <code>Task_B</code>, where <code>Task_B</code> is dependent on <code>Task_A</code>.  I've provided comments in the output to help visualize the order of events that take place when the Tasks run.</p>
+<p>There are few things to note about the code:<em> <code>GlobalParam</code> is a helper class to provide a global variable so I can count the execution events i.e. <strong>1:</strong> complete () ...</em> I replaced the Luigi <code>complete()</code> method with a similar method that checks if the output file exists so we could see the method executed in the print statements.</p>
+<ul>
+<li>
+<code>MockTarget</code> creates an in-memory file object that we can write to and check if it exists.</li>
+</ul>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">luigi</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">luigi.mock</span> <span class="kn">import</span> <span class="n">MockTarget</span>
+
+<span class="k">class</span> <span class="nc">GlobalParams</span><span class="p">(</span><span class="n">luigi</span><span class="o">.</span><span class="n">Config</span><span class="p">):</span>
+    <span class="n">count</span> <span class="o">=</span> <span class="n">luigi</span><span class="o">.</span><span class="n">IntParameter</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">Task_A</span><span class="p">(</span><span class="n">luigi</span><span class="o">.</span><span class="n">Task</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">output</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">MockTarget</span><span class="p">(</span><span class="s2">"Task_A"</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">g</span><span class="o">.</span><span class="n">count</span><span class="si">}</span><span class="s2">: run() </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> has no prior Task dependency. It is now running to complete the task"</span><span class="p">)</span>
+        <span class="n">g</span><span class="o">.</span><span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span> 
+        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">()</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">"w"</span><span class="p">)</span>
+        <span class="n">out</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'complete'</span><span class="p">)</span>
+        <span class="n">out</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    
+    <span class="k">def</span> <span class="nf">complete</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">g</span><span class="o">.</span><span class="n">count</span><span class="si">}</span><span class="s1">: complete() Checking to see if </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s1"> has been completed'</span><span class="p">)</span>
+        <span class="n">g</span><span class="o">.</span><span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span> 
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">()</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span> 
+
+        
+<span class="k">class</span> <span class="nc">Task_B</span><span class="p">(</span><span class="n">luigi</span><span class="o">.</span><span class="n">Task</span><span class="p">):</span>
+    
+    <span class="k">def</span> <span class="nf">requires</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">g</span><span class="o">.</span><span class="n">count</span><span class="si">}</span><span class="s1">: requires() </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s1"> is not completed, checking to see if previous tasks are required and completed'</span><span class="p">)</span>
+        <span class="n">g</span><span class="o">.</span><span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span> 
+        <span class="k">return</span> <span class="n">Task_A</span><span class="p">()</span>
+            
+    <span class="k">def</span> <span class="nf">output</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">MockTarget</span><span class="p">(</span><span class="s2">"Task_B"</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">g</span><span class="o">.</span><span class="n">count</span><span class="si">}</span><span class="s1">: run() All previous tasks are completed and </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s1"> is running to complete the task'</span><span class="p">)</span>
+        <span class="n">g</span><span class="o">.</span><span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span> 
+        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">()</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">"w"</span><span class="p">)</span>
+        <span class="n">out</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'complete'</span><span class="p">)</span>
+        <span class="n">out</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">g</span><span class="o">.</span><span class="n">count</span><span class="si">}</span><span class="s1">: All Tasks are completed'</span><span class="p">)</span>
+        
+    <span class="k">def</span> <span class="nf">complete</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">g</span><span class="o">.</span><span class="n">count</span><span class="si">}</span><span class="s1">: complete() Checking to see if </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s1"> has been completed'</span><span class="p">)</span>
+        <span class="n">g</span><span class="o">.</span><span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span> 
+        
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">()</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">g</span><span class="o">.</span><span class="n">count</span><span class="si">}</span><span class="s1">: All Tasks are completed'</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">()</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span>
+
+<span class="n">g</span> <span class="o">=</span> <span class="n">GlobalParams</span><span class="p">()</span>
+<span class="n">luigi</span><span class="o">.</span><span class="n">build</span><span class="p">([</span><span class="n">Task_B</span><span class="p">()],</span> <span class="n">local_scheduler</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>DEBUG: Checking if Task_B() is complete
+DEBUG: Checking if Task_A() is complete
+INFO: Informed scheduler that task   Task_B__99914b932b   has status   PENDING
+INFO: Informed scheduler that task   Task_A__99914b932b   has status   PENDING
+INFO: Done scheduling tasks
+INFO: Running Worker with 1 processes
+DEBUG: Asking scheduler for work...
+DEBUG: Pending tasks: 2
+INFO: [pid 2456] Worker Worker(salt=998663148, workers=1, host=DESKTOP-BCU4BGH, username=Mike, pid=2456) running   Task_A()
+INFO: [pid 2456] Worker Worker(salt=998663148, workers=1, host=DESKTOP-BCU4BGH, username=Mike, pid=2456) done      Task_A()
+DEBUG: 1 running tasks, waiting for next task to finish
+INFO: Informed scheduler that task   Task_A__99914b932b   has status   DONE
+DEBUG: Asking scheduler for work...
+DEBUG: Pending tasks: 1
+INFO: [pid 2456] Worker Worker(salt=998663148, workers=1, host=DESKTOP-BCU4BGH, username=Mike, pid=2456) running   Task_B()
+INFO: [pid 2456] Worker Worker(salt=998663148, workers=1, host=DESKTOP-BCU4BGH, username=Mike, pid=2456) done      Task_B()
+DEBUG: 1 running tasks, waiting for next task to finish
+INFO: Informed scheduler that task   Task_B__99914b932b   has status   DONE
+DEBUG: Asking scheduler for work...
+DEBUG: Done
+DEBUG: There are no more tasks to run at this time
+INFO: Worker Worker(salt=998663148, workers=1, host=DESKTOP-BCU4BGH, username=Mike, pid=2456) was stopped. Shutting down Keep-Alive thread
+INFO: 
+===== Luigi Execution Summary =====
+
+Scheduled 2 tasks of which:
+* 2 ran successfully:
+    - 1 Task_A()
+    - 1 Task_B()
+
+This progress looks :) because there were no failed tasks or missing dependencies
+
+===== Luigi Execution Summary =====
+
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>1: complete() Checking to see if Task_B has been completed
+2: requires() Task_B is not completed, checking to see if previous tasks are required and completed
+3: complete() Checking to see if Task_A has been completed
+4: run() Task_A has no prior Task dependency. It is now running to complete the task
+5: requires() Task_B is not completed, checking to see if previous tasks are required and completed
+6: complete() Checking to see if Task_A has been completed
+7: run() All previous tasks are completed and Task_B is running to complete the task
+8: All Tasks are completed
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>True</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>When we run the Task a second-time, note how <code>Task_A</code> is not referenced.  Luigi checked to see if <code>Task_B</code> was complete and stopped the execution since it returned <code>True</code>.  That means, that if some file upstream is updated and needed to be transformed by <code>Task_A</code>it would not occur since Luigi would always stop at <code>Task_B</code>.</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">g</span><span class="o">.</span><span class="n">count</span><span class="o">=</span><span class="mi">1</span>
+<span class="n">luigi</span><span class="o">.</span><span class="n">build</span><span class="p">([</span><span class="n">Task_B</span><span class="p">()],</span> <span class="n">local_scheduler</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>DEBUG: Checking if Task_B() is complete
+INFO: Informed scheduler that task   Task_B__99914b932b   has status   DONE
+INFO: Done scheduling tasks
+INFO: Running Worker with 1 processes
+DEBUG: Asking scheduler for work...
+DEBUG: Done
+DEBUG: There are no more tasks to run at this time
+INFO: Worker Worker(salt=177125647, workers=1, host=DESKTOP-BCU4BGH, username=Mike, pid=2456) was stopped. Shutting down Keep-Alive thread
+INFO: 
+===== Luigi Execution Summary =====
+
+Scheduled 1 tasks of which:
+* 1 complete ones were encountered:
+    - 1 Task_B()
+
+Did not run any tasks
+This progress looks :) because there were no failed tasks or missing dependencies
+
+===== Luigi Execution Summary =====
+
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>1: complete() Checking to see if Task_B has been completed
+2: All Tasks are completed
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>True</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Luigi-Paramaters">
+<a class="anchor" href="#Luigi-Paramaters" aria-hidden="true"><span class="octicon octicon-link"></span></a>Luigi Paramaters<a class="anchor-link" href="#Luigi-Paramaters"> </a>
+</h2>
+<blockquote>
+<p>Words $\longleftarrow$ Count</p>
+</blockquote>
+<p>Parameters are Luigi's intended way to make sure tasks get updated based on some frequency to make sure they don't get stuck in a "complete" status.  Luigi offers there own <code>Parameter</code> object that is mostly intended to act as a constructor when executing tasks from the command line.</p>
+<p>Below we have created two new Tasks, <code>Words</code> and <code>Count</code>.  Each task takes a date as a parameter and appends the date to the file name output.  You'll also notice I removed the <code>complete()</code> method.  This means it will default to the original method that also checks if the output target exists more robustly.</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="n">OUTPUT_PATH</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s1">'output'</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">Words</span><span class="p">(</span><span class="n">luigi</span><span class="o">.</span><span class="n">Task</span><span class="p">):</span>
+    <span class="n">date</span> <span class="o">=</span> <span class="n">luigi</span><span class="o">.</span><span class="n">DateParameter</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="o">.</span><span class="n">today</span><span class="p">())</span>
+    
+    <span class="k">def</span> <span class="nf">output</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">luigi</span><span class="o">.</span><span class="n">LocalTarget</span><span class="p">(</span><span class="n">OUTPUT_PATH</span><span class="o">/</span><span class="sa">f</span><span class="s1">'words_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">date</span><span class="si">}</span><span class="s1">.csv'</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">words</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'apple'</span><span class="p">,</span><span class="s1">'banana'</span><span class="p">,</span><span class="s1">'grapefruit'</span><span class="p">]</span>
+
+        <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">words</span><span class="o">=</span><span class="n">words</span><span class="p">))</span>
+        <span class="n">df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">()</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        
+<span class="k">class</span> <span class="nc">Count</span><span class="p">(</span><span class="n">luigi</span><span class="o">.</span><span class="n">Task</span><span class="p">):</span>
+    <span class="n">date</span> <span class="o">=</span> <span class="n">luigi</span><span class="o">.</span><span class="n">DateParameter</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="o">.</span><span class="n">today</span><span class="p">())</span>
+    
+    <span class="k">def</span> <span class="nf">requires</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Passing the luigi paramater back to upstream task</span>
+        <span class="k">return</span> <span class="n">Words</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">date</span><span class="p">)</span> 
+            
+    <span class="k">def</span> <span class="nf">output</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">luigi</span><span class="o">.</span><span class="n">LocalTarget</span><span class="p">(</span><span class="n">OUTPUT_PATH</span><span class="o">/</span><span class="sa">f</span><span class="s1">'count_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">date</span><span class="si">}</span><span class="s1">.csv'</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input</span><span class="p">()</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
+        <span class="n">df</span><span class="p">[</span><span class="s1">'letter_count'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">words</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="nb">len</span><span class="p">)</span>
+        <span class="n">df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">()</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        
+<span class="n">luigi</span><span class="o">.</span><span class="n">build</span><span class="p">([</span><span class="n">Count</span><span class="p">()],</span> <span class="n">local_scheduler</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>DEBUG: Checking if Count(date=2020-10-26) is complete
+DEBUG: Checking if Words(date=2020-10-26) is complete
+INFO: Informed scheduler that task   Count_2020_10_26_424115e443   has status   PENDING
+INFO: Informed scheduler that task   Words_2020_10_26_424115e443   has status   PENDING
+INFO: Done scheduling tasks
+INFO: Running Worker with 1 processes
+DEBUG: Asking scheduler for work...
+DEBUG: Pending tasks: 2
+INFO: [pid 2456] Worker Worker(salt=660151019, workers=1, host=DESKTOP-BCU4BGH, username=Mike, pid=2456) running   Words(date=2020-10-26)
+INFO: [pid 2456] Worker Worker(salt=660151019, workers=1, host=DESKTOP-BCU4BGH, username=Mike, pid=2456) done      Words(date=2020-10-26)
+DEBUG: 1 running tasks, waiting for next task to finish
+INFO: Informed scheduler that task   Words_2020_10_26_424115e443   has status   DONE
+DEBUG: Asking scheduler for work...
+DEBUG: Pending tasks: 1
+INFO: [pid 2456] Worker Worker(salt=660151019, workers=1, host=DESKTOP-BCU4BGH, username=Mike, pid=2456) running   Count(date=2020-10-26)
+INFO: [pid 2456] Worker Worker(salt=660151019, workers=1, host=DESKTOP-BCU4BGH, username=Mike, pid=2456) done      Count(date=2020-10-26)
+DEBUG: 1 running tasks, waiting for next task to finish
+INFO: Informed scheduler that task   Count_2020_10_26_424115e443   has status   DONE
+DEBUG: Asking scheduler for work...
+DEBUG: Done
+DEBUG: There are no more tasks to run at this time
+INFO: Worker Worker(salt=660151019, workers=1, host=DESKTOP-BCU4BGH, username=Mike, pid=2456) was stopped. Shutting down Keep-Alive thread
+INFO: 
+===== Luigi Execution Summary =====
+
+Scheduled 2 tasks of which:
+* 2 ran successfully:
+    - 1 Count(date=2020-10-26)
+    - 1 Words(date=2020-10-26)
+
+This progress looks :) because there were no failed tasks or missing dependencies
+
+===== Luigi Execution Summary =====
+
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>True</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>//Directory Tree:
+output/
+├── count_2020-10-26.csv
+└── words_2020-10-26.csv
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Above, our Tasks ran successfully and saved the outputs in our output directory.  So what happens if we were to run it a second time?</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">luigi</span><span class="o">.</span><span class="n">build</span><span class="p">([</span><span class="n">Count</span><span class="p">()],</span> <span class="n">local_scheduler</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>DEBUG: Checking if Count(date=2020-10-26) is complete
+INFO: Informed scheduler that task   Count_2020_10_26_424115e443   has status   DONE
+INFO: Done scheduling tasks
+INFO: Running Worker with 1 processes
+DEBUG: Asking scheduler for work...
+DEBUG: Done
+DEBUG: There are no more tasks to run at this time
+INFO: Worker Worker(salt=832748578, workers=1, host=DESKTOP-BCU4BGH, username=Mike, pid=2456) was stopped. Shutting down Keep-Alive thread
+INFO: 
+===== Luigi Execution Summary =====
+
+Scheduled 1 tasks of which:
+* 1 complete ones were encountered:
+    - 1 Count(date=2020-10-26)
+
+Did not run any tasks
+This progress looks :) because there were no failed tasks or missing dependencies
+
+===== Luigi Execution Summary =====
+
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>True</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>//Directory Tree:
+output/
+├── count_2020-10-26.csv
+└── words_2020-10-26.csv
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>As you can see, nothing happened since the <code>Count</code> task encountered an output that already existed with the same name.  Below we'll provide a different date to the <code>Count</code> task.</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">luigi</span><span class="o">.</span><span class="n">build</span><span class="p">([</span><span class="n">Count</span><span class="p">(</span><span class="n">date</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="s1">'10/25/2021'</span><span class="p">))],</span> <span class="n">local_scheduler</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>DEBUG: Checking if Count(date=2021-10-25) is complete
+DEBUG: Checking if Words(date=2021-10-25) is complete
+INFO: Informed scheduler that task   Count_2021_10_25_8a7563aba6   has status   PENDING
+INFO: Informed scheduler that task   Words_2021_10_25_8a7563aba6   has status   PENDING
+INFO: Done scheduling tasks
+INFO: Running Worker with 1 processes
+DEBUG: Asking scheduler for work...
+DEBUG: Pending tasks: 2
+INFO: [pid 2456] Worker Worker(salt=766530749, workers=1, host=DESKTOP-BCU4BGH, username=Mike, pid=2456) running   Words(date=2021-10-25)
+INFO: [pid 2456] Worker Worker(salt=766530749, workers=1, host=DESKTOP-BCU4BGH, username=Mike, pid=2456) done      Words(date=2021-10-25)
+DEBUG: 1 running tasks, waiting for next task to finish
+INFO: Informed scheduler that task   Words_2021_10_25_8a7563aba6   has status   DONE
+DEBUG: Asking scheduler for work...
+DEBUG: Pending tasks: 1
+INFO: [pid 2456] Worker Worker(salt=766530749, workers=1, host=DESKTOP-BCU4BGH, username=Mike, pid=2456) running   Count(date=2021-10-25)
+INFO: [pid 2456] Worker Worker(salt=766530749, workers=1, host=DESKTOP-BCU4BGH, username=Mike, pid=2456) done      Count(date=2021-10-25)
+DEBUG: 1 running tasks, waiting for next task to finish
+INFO: Informed scheduler that task   Count_2021_10_25_8a7563aba6   has status   DONE
+DEBUG: Asking scheduler for work...
+DEBUG: Done
+DEBUG: There are no more tasks to run at this time
+INFO: Worker Worker(salt=766530749, workers=1, host=DESKTOP-BCU4BGH, username=Mike, pid=2456) was stopped. Shutting down Keep-Alive thread
+INFO: 
+===== Luigi Execution Summary =====
+
+Scheduled 2 tasks of which:
+* 2 ran successfully:
+    - 1 Count(date=2021-10-25)
+    - 1 Words(date=2021-10-25)
+
+This progress looks :) because there were no failed tasks or missing dependencies
+
+===== Luigi Execution Summary =====
+
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>True</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>//Directory Tree:
+output/
+├── count_2020-10-26.csv
+├── count_2021-10-25.csv
+├── words_2020-10-26.csv
+└── words_2021-10-25.csv
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="External-Tasks">
+<a class="anchor" href="#External-Tasks" aria-hidden="true"><span class="octicon octicon-link"></span></a>External Tasks<a class="anchor-link" href="#External-Tasks"> </a>
+</h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>If your pipeline starts with some dependency from an External Task, you can utilize the <code>ExternalTask</code> object.  The <code>External Task</code> is the same as the <code>Task</code> object except it doesn't have a <code>run()</code> method.</p>
+<p><code>External Task</code> is useful because it allows for your task to gracefully end a job if the external source criteria are not met.</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">class</span> <span class="nc">Words</span><span class="p">(</span><span class="n">luigi</span><span class="o">.</span><span class="n">ExternalTask</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">output</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">luigi</span><span class="o">.</span><span class="n">LocalTarget</span><span class="p">(</span><span class="n">OUTPUT_PATH</span><span class="o">/</span><span class="sa">f</span><span class="s1">'words.csv'</span><span class="p">)</span>
+
+<span class="n">luigi</span><span class="o">.</span><span class="n">build</span><span class="p">([</span><span class="n">Words</span><span class="p">()],</span> <span class="n">local_scheduler</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>DEBUG: Checking if Words() is complete
+WARNING: Data for Words() does not exist (yet?). The task is an external data dependency, so it cannot be run from this luigi process.
+INFO: Informed scheduler that task   Words__99914b932b   has status   PENDING
+INFO: Done scheduling tasks
+INFO: Running Worker with 1 processes
+DEBUG: Asking scheduler for work...
+DEBUG: Done
+DEBUG: There are no more tasks to run at this time
+INFO: Worker Worker(salt=806349904, workers=1, host=DESKTOP-BCU4BGH, username=Mike, pid=2456) was stopped. Shutting down Keep-Alive thread
+INFO: 
+===== Luigi Execution Summary =====
+
+Scheduled 1 tasks of which:
+* 1 were left pending, among these:
+    * 1 were missing external dependencies:
+        - 1 Words()
+
+Did not run any tasks
+This progress looks :| because there were missing external dependencies
+
+===== Luigi Execution Summary =====
+
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>True</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Above, the <code>Words</code> external task did not run because <code>words.csv</code>, the external dependency, was missing.</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">OUTPUT_PATH</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s1">'output'</span><span class="p">)</span>
+
+<span class="n">words</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'apple'</span><span class="p">,</span><span class="s1">'banana'</span><span class="p">,</span><span class="s1">'grapefruit'</span><span class="p">]</span>
+
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">words</span><span class="o">=</span><span class="n">words</span><span class="p">))</span>
+<span class="n">df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">OUTPUT_PATH</span><span class="o">/</span><span class="s1">'words.csv'</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Now that we created <code>words.csv</code> our external task will return as completed and pass its output to the next Task if it exists.</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">luigi</span><span class="o">.</span><span class="n">build</span><span class="p">([</span><span class="n">Words</span><span class="p">()],</span> <span class="n">local_scheduler</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>DEBUG: Checking if Words() is complete
+INFO: Informed scheduler that task   Words__99914b932b   has status   DONE
+INFO: Done scheduling tasks
+INFO: Running Worker with 1 processes
+DEBUG: Asking scheduler for work...
+DEBUG: Done
+DEBUG: There are no more tasks to run at this time
+INFO: Worker Worker(salt=781673351, workers=1, host=DESKTOP-BCU4BGH, username=Mike, pid=2456) was stopped. Shutting down Keep-Alive thread
+INFO: 
+===== Luigi Execution Summary =====
+
+Scheduled 1 tasks of which:
+* 1 complete ones were encountered:
+    - 1 Words()
+
+Did not run any tasks
+This progress looks :) because there were no failed tasks or missing dependencies
+
+===== Luigi Execution Summary =====
+
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>True</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Alternate-Complete-Method">
+<a class="anchor" href="#Alternate-Complete-Method" aria-hidden="true"><span class="octicon octicon-link"></span></a>Alternate Complete Method<a class="anchor-link" href="#Alternate-Complete-Method"> </a>
+</h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>As I mentioned earlier, by default Luigi determines if a Task is complete by checking if the output exists.  However, there is a common use case in pipeline workflows where Tasks should be run when a file is updated.  Since Luigi only checks the output name it will determine that a Task is completed no matter how many times a file gets updated.</p>
+<p>However, we can override this method by overriding the <code>complete()</code> method in the <code>Task</code> object by defining your criteria.  It needs to return <code>False</code> if the task is not complete and <code>True</code> if the task is complete.</p>
+<p>Below we will create our own <code>complete()</code> function that will update all tasks where their dependent task output files have been updated.  It will first check to see if the dependency tasks have been completed, then check to see if the modified time of the output of the current task is greater than the modified time of the prior task's output.</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">time</span>
+
+<span class="k">class</span> <span class="nc">Words</span><span class="p">(</span><span class="n">luigi</span><span class="o">.</span><span class="n">ExternalTask</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">output</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">luigi</span><span class="o">.</span><span class="n">LocalTarget</span><span class="p">(</span><span class="n">OUTPUT_PATH</span><span class="o">/</span><span class="s1">'words.csv'</span><span class="p">)</span>
+    
+<span class="k">class</span> <span class="nc">CountLetters</span><span class="p">(</span><span class="n">luigi</span><span class="o">.</span><span class="n">Task</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">requires</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">Words</span><span class="p">()</span>
+
+    <span class="c1"># Custom Complete Method</span>
+    <span class="k">def</span> <span class="nf">complete</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>        
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">()</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">'//Count Letters: No Output File'</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="n">input_mtime</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">ctime</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">getmtime</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input</span><span class="p">()</span><span class="o">.</span><span class="n">path</span><span class="p">))</span>
+        <span class="n">output_mtime</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">ctime</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">getmtime</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">()</span><span class="o">.</span><span class="n">path</span><span class="p">))</span>            
+        
+        <span class="k">if</span> <span class="n">output_mtime</span> <span class="o">&lt;</span> <span class="n">input_mtime</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">'//Count Letters: File Out of Date'</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        
+        <span class="nb">print</span><span class="p">(</span><span class="s1">'//Count Letters: Task is Complete'</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">True</span>
+
+    
+    <span class="k">def</span> <span class="nf">output</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">luigi</span><span class="o">.</span><span class="n">LocalTarget</span><span class="p">(</span><span class="n">OUTPUT_PATH</span><span class="o">/</span><span class="s1">'count_letters.csv'</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input</span><span class="p">()</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
+        <span class="n">df</span><span class="p">[</span><span class="s1">'letter_count'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">words</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="nb">len</span><span class="p">)</span>
+        <span class="n">df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">()</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">luigi</span><span class="o">.</span><span class="n">build</span><span class="p">([</span><span class="n">CountLetters</span><span class="p">()],</span> <span class="n">local_scheduler</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>DEBUG: Checking if CountLetters() is complete
+DEBUG: Checking if Words() is complete
+INFO: Informed scheduler that task   CountLetters__99914b932b   has status   PENDING
+INFO: Informed scheduler that task   Words__99914b932b   has status   DONE
+INFO: Done scheduling tasks
+INFO: Running Worker with 1 processes
+DEBUG: Asking scheduler for work...
+DEBUG: Pending tasks: 1
+INFO: [pid 2456] Worker Worker(salt=437114638, workers=1, host=DESKTOP-BCU4BGH, username=Mike, pid=2456) running   CountLetters()
+INFO: [pid 2456] Worker Worker(salt=437114638, workers=1, host=DESKTOP-BCU4BGH, username=Mike, pid=2456) done      CountLetters()
+DEBUG: 1 running tasks, waiting for next task to finish
+INFO: Informed scheduler that task   CountLetters__99914b932b   has status   DONE
+DEBUG: Asking scheduler for work...
+DEBUG: Done
+DEBUG: There are no more tasks to run at this time
+INFO: Worker Worker(salt=437114638, workers=1, host=DESKTOP-BCU4BGH, username=Mike, pid=2456) was stopped. Shutting down Keep-Alive thread
+INFO: 
+===== Luigi Execution Summary =====
+
+Scheduled 2 tasks of which:
+* 1 complete ones were encountered:
+    - 1 Words()
+* 1 ran successfully:
+    - 1 CountLetters()
+
+This progress looks :) because there were no failed tasks or missing dependencies
+
+===== Luigi Execution Summary =====
+
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>//Count Letters: No Output File
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>True</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>//Directory Tree:
+output/
+├── count_letters.csv
+└── words.csv
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>When we run the task again it doesn't run any tasks because <code>words.csv</code> exists and its modified time (mtime) is less than <code>count_letters.csv</code> modified time.</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">luigi</span><span class="o">.</span><span class="n">build</span><span class="p">([</span><span class="n">CountLetters</span><span class="p">()],</span> <span class="n">local_scheduler</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>DEBUG: Checking if CountLetters() is complete
+INFO: Informed scheduler that task   CountLetters__99914b932b   has status   DONE
+INFO: Done scheduling tasks
+INFO: Running Worker with 1 processes
+DEBUG: Asking scheduler for work...
+DEBUG: Done
+DEBUG: There are no more tasks to run at this time
+INFO: Worker Worker(salt=438850535, workers=1, host=DESKTOP-BCU4BGH, username=Mike, pid=2456) was stopped. Shutting down Keep-Alive thread
+INFO: 
+===== Luigi Execution Summary =====
+
+Scheduled 1 tasks of which:
+* 1 complete ones were encountered:
+    - 1 CountLetters()
+
+Did not run any tasks
+This progress looks :) because there were no failed tasks or missing dependencies
+
+===== Luigi Execution Summary =====
+
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>//Count Letters: Task is Complete
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>True</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>We will now update <code>count_letters.csv</code> to include a few more words and watch our Luigi run the Task because of the updated modification times on the files.</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">words</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'apple'</span><span class="p">,</span><span class="s1">'banana'</span><span class="p">,</span><span class="s1">'grapefruit'</span><span class="p">,</span> <span class="s1">'cherry'</span><span class="p">,</span> <span class="s1">'orange'</span><span class="p">]</span>
+
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">words</span><span class="o">=</span><span class="n">words</span><span class="p">))</span>
+<span class="n">df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">OUTPUT_PATH</span><span class="o">/</span><span class="s1">'words.csv'</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="n">luigi</span><span class="o">.</span><span class="n">build</span><span class="p">([</span><span class="n">CountLetters</span><span class="p">()],</span> <span class="n">local_scheduler</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>DEBUG: Checking if CountLetters() is complete
+DEBUG: Checking if Words() is complete
+INFO: Informed scheduler that task   CountLetters__99914b932b   has status   PENDING
+INFO: Informed scheduler that task   Words__99914b932b   has status   DONE
+INFO: Done scheduling tasks
+INFO: Running Worker with 1 processes
+DEBUG: Asking scheduler for work...
+DEBUG: Pending tasks: 1
+INFO: [pid 2456] Worker Worker(salt=695141065, workers=1, host=DESKTOP-BCU4BGH, username=Mike, pid=2456) running   CountLetters()
+INFO: [pid 2456] Worker Worker(salt=695141065, workers=1, host=DESKTOP-BCU4BGH, username=Mike, pid=2456) done      CountLetters()
+DEBUG: 1 running tasks, waiting for next task to finish
+INFO: Informed scheduler that task   CountLetters__99914b932b   has status   DONE
+DEBUG: Asking scheduler for work...
+DEBUG: Done
+DEBUG: There are no more tasks to run at this time
+INFO: Worker Worker(salt=695141065, workers=1, host=DESKTOP-BCU4BGH, username=Mike, pid=2456) was stopped. Shutting down Keep-Alive thread
+INFO: 
+===== Luigi Execution Summary =====
+
+Scheduled 2 tasks of which:
+* 1 complete ones were encountered:
+    - 1 Words()
+* 1 ran successfully:
+    - 1 CountLetters()
+
+This progress looks :) because there were no failed tasks or missing dependencies
+
+===== Luigi Execution Summary =====
+
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>//Count Letters: File Out of Date
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>True</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="SQL-Tasks">
+<a class="anchor" href="#SQL-Tasks" aria-hidden="true"><span class="octicon octicon-link"></span></a>SQL Tasks<a class="anchor-link" href="#SQL-Tasks"> </a>
+</h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<blockquote>
+<p>Words $\longleftarrow$ Count $\longleftarrow$ StoreSQL $\longleftarrow$ PrintSQL</p>
+</blockquote>
+<p>SQL is a common step in many pipelines but the Luigi getting started docs barely cover the topic.  In this section we will create two new tasks.  The first task, <code>StoreSql</code>, will take the ouput from <code>CountLetters</code> and store it in a <code>SQLite</code> database.  The second task, <code>PrintSQL</code>, will then read from out database and print both tables that Luigi created.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The big difference between <code>LocalTarget</code>  is that <code>SQLAlchemyTarget</code> creates and updates a "Marker Table" to keep track of whether a task is complete or not.  You provide the Marker Table with a <code>update_id</code> and Luigi will check if it exists before running the Task.</p>
+<p>Below I've provided the code for our <code>StoreSQL</code> and <code>PrintSQL</code> tasks.  There are a couple of things worth noting.</p>
+<ul>
+<li>We have overridden the <code>complete()</code> method to check if the prior task <code>CountLetters</code> has been completed and if the <code>StoreSQL</code> task output exists.  If either returns <code>False</code> the Task will run.</li>
+<li>We are creating an SQLite database called <code>my.db</code>.</li>
+<li>
+<code>self.output().touch()</code> is what marks the Task as complete and creates/updates the Marker Table</li>
+<li>
+<code>PrintSQL</code> is complete method is set to False so that it always runs for demonstration purposes.</li>
+</ul>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>//Directory Tree:
+output/
+├── count_letters.csv
+└── words.csv
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">luigi.contrib</span> <span class="kn">import</span> <span class="n">sqla</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="kn">import</span> <span class="n">create_engine</span>
+
+<span class="n">OUTPUT_PATH</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s1">'output'</span><span class="p">)</span>
+<span class="n">connection_string</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"sqlite:///</span><span class="si">{</span><span class="n">OUTPUT_PATH</span><span class="si">}</span><span class="s2">/my.db"</span>
+
+<span class="n">outputs</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="k">class</span> <span class="nc">StoreSQL</span><span class="p">(</span><span class="n">luigi</span><span class="o">.</span><span class="n">Task</span><span class="p">):</span>
+    <span class="n">connection_string</span> <span class="o">=</span> <span class="n">luigi</span><span class="o">.</span><span class="n">Parameter</span><span class="p">()</span>
+    <span class="n">target_table</span> <span class="o">=</span> <span class="n">luigi</span><span class="o">.</span><span class="n">Parameter</span><span class="p">()</span>
+    
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">update_id</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">mtime</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">getmtime</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input</span><span class="p">()</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
+        <span class="n">mtime</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">fromtimestamp</span><span class="p">(</span><span class="n">mtime</span><span class="p">)</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">"%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M:%S"</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">mtime</span> <span class="o">+</span> <span class="s1">'_'</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">target_table</span>
+
+    <span class="k">def</span> <span class="nf">complete</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">()</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">requires</span><span class="p">()</span><span class="o">.</span><span class="n">complete</span><span class="p">():</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        
+        <span class="k">return</span> <span class="kc">True</span>
+        
+    <span class="k">def</span> <span class="nf">requires</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">CountLetters</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">output</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">sqla</span><span class="o">.</span><span class="n">SQLAlchemyTarget</span><span class="p">(</span>
+            <span class="n">connection_string</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">connection_string</span><span class="p">,</span>
+            <span class="n">target_table</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">target_table</span><span class="p">,</span>
+            <span class="n">update_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">update_id</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">requires</span><span class="p">()</span><span class="o">.</span><span class="n">complete</span><span class="p">()</span>
+        <span class="n">con</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">()</span><span class="o">.</span><span class="n">engine</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input</span><span class="p">()</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
+        <span class="n">df</span><span class="o">.</span><span class="n">to_sql</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">target_table</span><span class="p">,</span> <span class="n">con</span><span class="o">=</span><span class="n">con</span><span class="p">,</span> <span class="n">if_exists</span><span class="o">=</span><span class="s1">'replace'</span><span class="p">)</span>
+
+        <span class="c1"># Update Marker Table</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">()</span><span class="o">.</span><span class="n">touch</span><span class="p">()</span>
+
+
+<span class="k">class</span> <span class="nc">PrintSQL</span><span class="p">(</span><span class="n">luigi</span><span class="o">.</span><span class="n">Task</span><span class="p">):</span>
+    <span class="n">connection_string</span> <span class="o">=</span> <span class="n">luigi</span><span class="o">.</span><span class="n">Parameter</span><span class="p">()</span>
+    <span class="n">target_table</span> <span class="o">=</span> <span class="n">luigi</span><span class="o">.</span><span class="n">Parameter</span><span class="p">()</span>
+    
+    <span class="k">def</span> <span class="nf">requires</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">StoreSQL</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">connection_string</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">target_table</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">complete</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
+    <span class="k">def</span> <span class="nf">output</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">input</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">input</span><span class="p">()</span>
+        <span class="n">con</span> <span class="o">=</span> <span class="nb">input</span><span class="o">.</span><span class="n">engine</span>
+        <span class="n">table</span> <span class="o">=</span> <span class="nb">input</span><span class="o">.</span><span class="n">target_table</span>
+        
+        <span class="nb">print</span><span class="p">(</span><span class="s1">'// Letter Count Table'</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">read_sql</span><span class="p">(</span><span class="n">sql</span><span class="o">=</span><span class="n">table</span><span class="p">,</span> <span class="n">con</span><span class="o">=</span><span class="n">con</span><span class="p">),</span> <span class="n">end</span><span class="o">=</span><span class="s1">'</span><span class="se">\n\n</span><span class="s1">'</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">'// Marker Table'</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">read_sql</span><span class="p">(</span><span class="n">sql</span><span class="o">=</span><span class="s1">'table_updates'</span><span class="p">,</span> <span class="n">con</span><span class="o">=</span><span class="n">con</span><span class="p">))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">luigi</span><span class="o">.</span><span class="n">build</span><span class="p">([</span><span class="n">PrintSQL</span><span class="p">(</span><span class="n">connection_string</span><span class="p">,</span> <span class="n">target_table</span><span class="o">=</span><span class="s1">'letter_count'</span><span class="p">)],</span> <span class="n">local_scheduler</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>DEBUG: Checking if PrintSQL(connection_string=sqlite:///output/my.db, target_table=letter_count) is complete
+DEBUG: Checking if StoreSQL(connection_string=sqlite:///output/my.db, target_table=letter_count) is complete
+INFO: Informed scheduler that task   PrintSQL_sqlite____output_letter_count_4c5210e673   has status   PENDING
+DEBUG: Checking if CountLetters() is complete
+INFO: Informed scheduler that task   StoreSQL_sqlite____output_letter_count_4c5210e673   has status   PENDING
+INFO: Informed scheduler that task   CountLetters__99914b932b   has status   DONE
+INFO: Done scheduling tasks
+INFO: Running Worker with 1 processes
+DEBUG: Asking scheduler for work...
+DEBUG: Pending tasks: 2
+INFO: [pid 2456] Worker Worker(salt=382729348, workers=1, host=DESKTOP-BCU4BGH, username=Mike, pid=2456) running   StoreSQL(connection_string=sqlite:///output/my.db, target_table=letter_count)
+INFO: [pid 2456] Worker Worker(salt=382729348, workers=1, host=DESKTOP-BCU4BGH, username=Mike, pid=2456) done      StoreSQL(connection_string=sqlite:///output/my.db, target_table=letter_count)
+DEBUG: 1 running tasks, waiting for next task to finish
+INFO: Informed scheduler that task   StoreSQL_sqlite____output_letter_count_4c5210e673   has status   DONE
+DEBUG: Asking scheduler for work...
+DEBUG: Pending tasks: 1
+INFO: [pid 2456] Worker Worker(salt=382729348, workers=1, host=DESKTOP-BCU4BGH, username=Mike, pid=2456) running   PrintSQL(connection_string=sqlite:///output/my.db, target_table=letter_count)
+INFO: [pid 2456] Worker Worker(salt=382729348, workers=1, host=DESKTOP-BCU4BGH, username=Mike, pid=2456) done      PrintSQL(connection_string=sqlite:///output/my.db, target_table=letter_count)
+DEBUG: 1 running tasks, waiting for next task to finish
+INFO: Informed scheduler that task   PrintSQL_sqlite____output_letter_count_4c5210e673   has status   DONE
+DEBUG: Asking scheduler for work...
+DEBUG: Done
+DEBUG: There are no more tasks to run at this time
+INFO: Worker Worker(salt=382729348, workers=1, host=DESKTOP-BCU4BGH, username=Mike, pid=2456) was stopped. Shutting down Keep-Alive thread
+INFO: 
+===== Luigi Execution Summary =====
+
+Scheduled 3 tasks of which:
+* 1 complete ones were encountered:
+    - 1 CountLetters()
+* 2 ran successfully:
+    - 1 PrintSQL(connection_string=sqlite:///output/my.db, target_table=letter_count)
+    - 1 StoreSQL(connection_string=sqlite:///output/my.db, target_table=letter_count)
+
+This progress looks :) because there were no failed tasks or missing dependencies
+
+===== Luigi Execution Summary =====
+
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>// Letter Count Table
+   index       words  letter_count
+0      0       apple             5
+1      1      banana             6
+2      2  grapefruit            10
+3      3      cherry             6
+4      4      orange             6
+
+// Marker Table
+                          update_id  target_table                   inserted
+0  2020-10-26 17:09:56_letter_count  letter_count 2020-10-26 17:10:30.763616
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>True</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">paths</span> <span class="o">=</span> <span class="n">DisplayablePath</span><span class="o">.</span><span class="n">make_tree</span><span class="p">(</span><span class="n">OUTPUT_PATH</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'Output Directory Tree:'</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">paths</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">displayable</span><span class="p">())</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Output Directory Tree:
+output/
+├── count_letters.csv
+├── my.db
+└── words.csv
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>As you can see from above, our SQL Task has updated two tables and printed out the table results.  If you look at the Marker table <code>update_id</code> column you'll notice it is the concatenation of our <code>count_letters.csv</code> mtime and target table name.</p>
+<p>Now let's update our <code>words.csv</code> and see what happens when we run the task again.</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">words</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'apple'</span><span class="p">,</span><span class="s1">'banana'</span><span class="p">,</span><span class="s1">'grapefruit'</span><span class="p">,</span> <span class="s1">'cherry'</span><span class="p">,</span> <span class="s1">'orange'</span><span class="p">,</span> <span class="s1">'peach'</span><span class="p">,</span> <span class="s1">'strawberry'</span><span class="p">]</span>
+
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">words</span><span class="o">=</span><span class="n">words</span><span class="p">))</span>
+<span class="n">df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">OUTPUT_PATH</span><span class="o">/</span><span class="s1">'words.csv'</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">luigi</span><span class="o">.</span><span class="n">build</span><span class="p">([</span><span class="n">PrintSQL</span><span class="p">(</span><span class="n">connection_string</span><span class="p">,</span> <span class="n">target_table</span><span class="o">=</span><span class="s1">'letter_count'</span><span class="p">)],</span> <span class="n">local_scheduler</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>DEBUG: Checking if PrintSQL(connection_string=sqlite:///output/my.db, target_table=letter_count) is complete
+DEBUG: Checking if StoreSQL(connection_string=sqlite:///output/my.db, target_table=letter_count) is complete
+INFO: Informed scheduler that task   PrintSQL_sqlite____output_letter_count_4c5210e673   has status   PENDING
+DEBUG: Checking if CountLetters() is complete
+INFO: Informed scheduler that task   StoreSQL_sqlite____output_letter_count_4c5210e673   has status   PENDING
+DEBUG: Checking if Words() is complete
+INFO: Informed scheduler that task   CountLetters__99914b932b   has status   PENDING
+INFO: Informed scheduler that task   Words__99914b932b   has status   DONE
+INFO: Done scheduling tasks
+INFO: Running Worker with 1 processes
+DEBUG: Asking scheduler for work...
+DEBUG: Pending tasks: 3
+INFO: [pid 2456] Worker Worker(salt=051857807, workers=1, host=DESKTOP-BCU4BGH, username=Mike, pid=2456) running   CountLetters()
+INFO: [pid 2456] Worker Worker(salt=051857807, workers=1, host=DESKTOP-BCU4BGH, username=Mike, pid=2456) done      CountLetters()
+DEBUG: 1 running tasks, waiting for next task to finish
+INFO: Informed scheduler that task   CountLetters__99914b932b   has status   DONE
+DEBUG: Asking scheduler for work...
+DEBUG: Pending tasks: 2
+INFO: [pid 2456] Worker Worker(salt=051857807, workers=1, host=DESKTOP-BCU4BGH, username=Mike, pid=2456) running   StoreSQL(connection_string=sqlite:///output/my.db, target_table=letter_count)
+INFO: [pid 2456] Worker Worker(salt=051857807, workers=1, host=DESKTOP-BCU4BGH, username=Mike, pid=2456) done      StoreSQL(connection_string=sqlite:///output/my.db, target_table=letter_count)
+DEBUG: 1 running tasks, waiting for next task to finish
+INFO: Informed scheduler that task   StoreSQL_sqlite____output_letter_count_4c5210e673   has status   DONE
+DEBUG: Asking scheduler for work...
+DEBUG: Pending tasks: 1
+INFO: [pid 2456] Worker Worker(salt=051857807, workers=1, host=DESKTOP-BCU4BGH, username=Mike, pid=2456) running   PrintSQL(connection_string=sqlite:///output/my.db, target_table=letter_count)
+INFO: [pid 2456] Worker Worker(salt=051857807, workers=1, host=DESKTOP-BCU4BGH, username=Mike, pid=2456) done      PrintSQL(connection_string=sqlite:///output/my.db, target_table=letter_count)
+DEBUG: 1 running tasks, waiting for next task to finish
+INFO: Informed scheduler that task   PrintSQL_sqlite____output_letter_count_4c5210e673   has status   DONE
+DEBUG: Asking scheduler for work...
+DEBUG: Done
+DEBUG: There are no more tasks to run at this time
+INFO: Worker Worker(salt=051857807, workers=1, host=DESKTOP-BCU4BGH, username=Mike, pid=2456) was stopped. Shutting down Keep-Alive thread
+INFO: 
+===== Luigi Execution Summary =====
+
+Scheduled 4 tasks of which:
+* 1 complete ones were encountered:
+    - 1 Words()
+* 3 ran successfully:
+    - 1 CountLetters()
+    - 1 PrintSQL(connection_string=sqlite:///output/my.db, target_table=letter_count)
+    - 1 StoreSQL(connection_string=sqlite:///output/my.db, target_table=letter_count)
+
+This progress looks :) because there were no failed tasks or missing dependencies
+
+===== Luigi Execution Summary =====
+
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>// Letter Count Table
+   index       words  letter_count
+0      0       apple             5
+1      1      banana             6
+2      2  grapefruit            10
+3      3      cherry             6
+4      4      orange             6
+5      5       peach             5
+6      6  strawberry            10
+
+// Marker Table
+                          update_id  target_table                   inserted
+0  2020-10-26 17:09:56_letter_count  letter_count 2020-10-26 17:10:30.763616
+1  2020-10-26 17:10:34_letter_count  letter_count 2020-10-26 17:10:34.734229
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>True</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>As expected, our Letter Count table updated and the Marker Table's contains a new row to represent the task completing.</p>
+<p>Let's run the task one more time without updating <code>words.csv</code>.</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">luigi</span><span class="o">.</span><span class="n">build</span><span class="p">([</span><span class="n">PrintSQL</span><span class="p">(</span><span class="n">connection_string</span><span class="p">,</span> <span class="n">target_table</span><span class="o">=</span><span class="s1">'letter_count'</span><span class="p">)],</span> <span class="n">local_scheduler</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>DEBUG: Checking if PrintSQL(connection_string=sqlite:///output/my.db, target_table=letter_count) is complete
+DEBUG: Checking if StoreSQL(connection_string=sqlite:///output/my.db, target_table=letter_count) is complete
+INFO: Informed scheduler that task   PrintSQL_sqlite____output_letter_count_4c5210e673   has status   PENDING
+INFO: Informed scheduler that task   StoreSQL_sqlite____output_letter_count_4c5210e673   has status   DONE
+INFO: Done scheduling tasks
+INFO: Running Worker with 1 processes
+DEBUG: Asking scheduler for work...
+DEBUG: Pending tasks: 1
+INFO: [pid 2456] Worker Worker(salt=023539738, workers=1, host=DESKTOP-BCU4BGH, username=Mike, pid=2456) running   PrintSQL(connection_string=sqlite:///output/my.db, target_table=letter_count)
+INFO: [pid 2456] Worker Worker(salt=023539738, workers=1, host=DESKTOP-BCU4BGH, username=Mike, pid=2456) done      PrintSQL(connection_string=sqlite:///output/my.db, target_table=letter_count)
+DEBUG: 1 running tasks, waiting for next task to finish
+INFO: Informed scheduler that task   PrintSQL_sqlite____output_letter_count_4c5210e673   has status   DONE
+DEBUG: Asking scheduler for work...
+DEBUG: Done
+DEBUG: There are no more tasks to run at this time
+INFO: Worker Worker(salt=023539738, workers=1, host=DESKTOP-BCU4BGH, username=Mike, pid=2456) was stopped. Shutting down Keep-Alive thread
+INFO: 
+===== Luigi Execution Summary =====
+
+Scheduled 2 tasks of which:
+* 1 complete ones were encountered:
+    - 1 StoreSQL(connection_string=sqlite:///output/my.db, target_table=letter_count)
+* 1 ran successfully:
+    - 1 PrintSQL(connection_string=sqlite:///output/my.db, target_table=letter_count)
+
+This progress looks :) because there were no failed tasks or missing dependencies
+
+===== Luigi Execution Summary =====
+
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>// Letter Count Table
+   index       words  letter_count
+0      0       apple             5
+1      1      banana             6
+2      2  grapefruit            10
+3      3      cherry             6
+4      4      orange             6
+5      5       peach             5
+6      6  strawberry            10
+
+// Marker Table
+                          update_id  target_table                   inserted
+0  2020-10-26 17:09:56_letter_count  letter_count 2020-10-26 17:10:30.763616
+1  2020-10-26 17:10:34_letter_count  letter_count 2020-10-26 17:10:34.734229
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>True</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The only task that ran was the <code>PrintSQL</code> task, and our other task(s) didn't run.  The Marker Table was also not updated.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Resources">
+<a class="anchor" href="#Resources" aria-hidden="true"><span class="octicon octicon-link"></span></a>Resources<a class="anchor-link" href="#Resources"> </a>
+</h2>
+<ul>
+<li><a href="https://stackoverflow.com/questions/40407936/mysql-targets-in-luigi-workflow/40423427#40423427">https://stackoverflow.com/questions/40407936/mysql-targets-in-luigi-workflow/40423427#40423427</a></li>
+<li><a href="https://stackoverflow.com/questions/40707004/using-luigi-to-update-postgres-table">https://stackoverflow.com/questions/40707004/using-luigi-to-update-postgres-table</a></li>
+<li><a href="https://stackoverflow.com/questions/28793832/can-luigi-rerun-tasks-when-the-task-dependencies-become-out-of-date">https://stackoverflow.com/questions/28793832/can-luigi-rerun-tasks-when-the-task-dependencies-become-out-of-date</a></li>
+<li><a href="https://luigi.readthedocs.io/en/stable/_modules/luigi/contrib/sqla.html">https://luigi.readthedocs.io/en/stable/_modules/luigi/contrib/sqla.html</a></li>
+<li><a href="https://stackoverflow.com/questions/9727673/list-directory-tree-structure-in-python">https://stackoverflow.com/questions/9727673/list-directory-tree-structure-in-python</a></li>
+<li><a href="https://stackoverflow.com/questions/11349333/how-to-ignore-the-first-line-of-data-when-processing-csv-data">https://stackoverflow.com/questions/11349333/how-to-ignore-the-first-line-of-data-when-processing-csv-data</a></li>
+<li><a href="https://stackoverflow.com/questions/35918605/how-to-delete-a-table-in-sqlalchemy">https://stackoverflow.com/questions/35918605/how-to-delete-a-table-in-sqlalchemy</a></li>
+<li><a href="https://stackoverflow.com/questions/11900553/sqlalchemy-table-already-exists">https://stackoverflow.com/questions/11900553/sqlalchemy-table-already-exists</a></li>
+<li><a href="https://stackoverflow.com/questions/237079/how-to-get-file-creation-modification-date-times-in-python">https://stackoverflow.com/questions/237079/how-to-get-file-creation-modification-date-times-in-python</a></li>
+<li><a href="https://stackoverflow.com/questions/48509083/how-to-make-a-parameter-available-to-all-luigi-tasks">https://stackoverflow.com/questions/48509083/how-to-make-a-parameter-available-to-all-luigi-tasks</a></li>
+</ul>
+
+</div>
+</div>
+</div>
+</div>
+
+
+
+  </div><!-- from https://github.com/utterance/utterances -->
+<script src="https://utteranc.es/client.js"
+        repo="gardnmi/blog"
+        issue-term="title"
+        label="blogpost-comment"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script><a class="u-url" href="/blog/jupyter/pandas/luigi/python/2020/10/26/luigi-etl.html" hidden></a>
+</article>
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/blog/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <p class="feed-subscribe">
+          <a href="/blog/feed.xml">
+            <svg class="svg-icon orange">
+              <use xlink:href="/blog/assets/minima-social-icons.svg#rss"></use>
+            </svg><span>Subscribe</span>
+          </a>
+        </p>
+      </div>
+      <div class="footer-col">
+        <p>A Blog about Python, Data, and Analytics.</p>
+      </div>
+    </div>
+
+    <div class="social-links"><ul class="social-media-list"><li><a rel="me" href="https://github.com/gardnmi" title="gardnmi"><svg class="svg-icon grey"><use xlink:href="/blog/assets/minima-social-icons.svg#github"></use></svg></a></li></ul>
+</div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
