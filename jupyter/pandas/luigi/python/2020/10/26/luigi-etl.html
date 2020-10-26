@@ -242,10 +242,24 @@ window.onload = wrap_img;
 <p>Task A $\longleftarrow$ Task B</p>
 </blockquote>
 <p>The below code is an example of how to set up a Luigi Task.  We have two classes, <code>Task_A</code> and <code>Task_B</code>, where <code>Task_B</code> is dependent on <code>Task_A</code>.  I've provided comments in the output to help visualize the order of events that take place when the Tasks run.</p>
-<p>There are few things to note about the code:<em> <code>GlobalParam</code> is a helper class to provide a global variable so I can count the execution events i.e. <strong>1:</strong> complete () ...</em> I replaced the Luigi <code>complete()</code> method with a similar method that checks if the output file exists so we could see the method executed in the print statements.</p>
+<p>There are few things to note about the code:</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
 <ul>
 <li>
-<code>MockTarget</code> creates an in-memory file object that we can write to and check if it exists.</li>
+<p><code>GlobalParam</code> is a helper class to provide a global variable so I can count the execution events i.e. <strong>1:</strong> complete () ...</p>
+</li>
+<li>
+<p>I replaced the Luigi <code>complete()</code> method with a similar method that checks if the output file exists so we could see the method executed in the print statements.</p>
+</li>
+<li>
+<p><code>MockTarget</code> creates an in-memory file object that we can write to and check if it exists.</p>
+</li>
 </ul>
 
 </div>
