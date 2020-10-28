@@ -167,6 +167,7 @@ window.onload = wrap_img;
 <h2 id="About">
 <a class="anchor" href="#About" aria-hidden="true"><span class="octicon octicon-link"></span></a>About<a class="anchor-link" href="#About"> </a>
 </h2>
+<p>To run this code yourself please visit the <a href="https://github.com/gardnmi/luigi-example">github repo.</a></p>
 <p>Luigi is a python ETL framework built by Spotify.  I use pandas in my day-to-day job and have created numerous pipeline tasks to move, transform, and analyze data across my organization.  I thought Luigi would be a great addition to help manage these pipelines, but after reading their getting started documentation, it left me scratching my head.</p>
 <p>If you are reading this, then I assume the docs have you confused as well, and hopefully, my post below can provide you with a bit more clarity.  The post assumes you have already read the docs. If you haven't, please read that first before continuing.</p>
 
@@ -492,7 +493,7 @@ This progress looks :) because there were no failed tasks or missing dependencie
 <blockquote>
 <p>Words $\longleftarrow$ Count</p>
 </blockquote>
-<p>Parameters are Luigi's intended way to make sure tasks get updated based on some frequency to make sure they don't get stuck in a "complete" status.  Luigi offers there own <code>Parameter</code> object that is mostly intended to act as a constructor when executing tasks from the command line.</p>
+<p>Parameters are Luigi's intended way to make sure tasks get updated based on some frequency to make sure they don't get stuck in a "complete" status.  Luigi offers their own <code>Parameter</code> object that is mostly intended to act as a constructor when executing tasks from the command line.</p>
 <p>Below we have created two new Tasks, <code>Words</code> and <code>Count</code>.  Each task takes a date as a parameter and appends the date to the file name output.  You'll also notice I removed the <code>complete()</code> method.  This means it will default to the original method that also checks if the output target exists more robustly.</p>
 
 </div>
