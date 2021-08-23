@@ -1,0 +1,1751 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="twitter:card" content="summary_large_image" /><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Chaining in Pandas | //gardnmi</title>
+<meta name="generator" content="Jekyll v4.1.1" />
+<meta property="og:title" content="Chaining in Pandas" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Pandas chaining is an alternative to variable assignment when transforming data. Those in favor of chaining argue that the code is easier to read because it lays out the execution of the transformation like a recipe. In this post we will explore transforming the Titanic Dataset to prep it for machine learning using both chaining and variable transformation." />
+<meta property="og:description" content="Pandas chaining is an alternative to variable assignment when transforming data. Those in favor of chaining argue that the code is easier to read because it lays out the execution of the transformation like a recipe. In this post we will explore transforming the Titanic Dataset to prep it for machine learning using both chaining and variable transformation." />
+<link rel="canonical" href="https://gardnmi.github.io/blog/jupyter/pandas/python/2021/08/22/chaining-in-pandas.html" />
+<meta property="og:url" content="https://gardnmi.github.io/blog/jupyter/pandas/python/2021/08/22/chaining-in-pandas.html" />
+<meta property="og:site_name" content="//gardnmi" />
+<meta property="og:image" content="https://gardnmi.github.io/blog/images/undraw_chaining.svg" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2021-08-22T00:00:00-05:00" />
+<script type="application/ld+json">
+{"description":"Pandas chaining is an alternative to variable assignment when transforming data. Those in favor of chaining argue that the code is easier to read because it lays out the execution of the transformation like a recipe. In this post we will explore transforming the Titanic Dataset to prep it for machine learning using both chaining and variable transformation.","url":"https://gardnmi.github.io/blog/jupyter/pandas/python/2021/08/22/chaining-in-pandas.html","@type":"BlogPosting","headline":"Chaining in Pandas","dateModified":"2021-08-22T00:00:00-05:00","datePublished":"2021-08-22T00:00:00-05:00","image":"https://gardnmi.github.io/blog/images/undraw_chaining.svg","mainEntityOfPage":{"@type":"WebPage","@id":"https://gardnmi.github.io/blog/jupyter/pandas/python/2021/08/22/chaining-in-pandas.html"},"@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/blog/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="https://gardnmi.github.io/blog/feed.xml" title="//gardnmi" /><link rel="shortcut icon" type="image/x-icon" href="/blog/images/favicon.ico"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Primer/15.2.0/primer.css" integrity="sha512-xTz2ys4coGAOz8vuV1NcQBkgVmKhsSEtjbqyMJbBHRplFuvKIUo6xhLHpAyPt9mfR6twHJgn9OgVLuqOvjeBhg==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSriVlkMXe40PTKnXrLnZ9+fkDaog==" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.12.0/katex.min.css" integrity="sha512-h7nl+xz8wgDlNM4NqKEM4F1NkIRS17M9+uJwIGwuo8vGqIl4BhuCKdxjWEINm+xyrUjNCnK5dCrhM0sj+wTIXw==" crossorigin="anonymous" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.12.0/katex.min.js" integrity="sha512-/CMIhXiDA3m2c9kzRyd97MTb3MC6OVnx4TElQ7fkkoRghwDf6gi41gaT1PwF270W6+J60uTmwgeRpNpJdRV6sg==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.12.0/contrib/auto-render.min.js" integrity="sha512-Do7uJAaHZm5OLrIv/yN4w0iG1dbu01kzdMNnFfu/mAqgUk6Nniv2JYHcwH+cNwjqgLcqcuBBk+JRvprLVI8azg==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha512-0doc9hKxR3PYwso42RD1p5ySZpzzuDiOwMrdCEh2WdJZCjcmFKc/wEnL+z8fBQrnHoiNWbo+3fiGkOYXBdQp4A==" crossorigin="anonymous"></script>
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement( document.body, {
+        delimiters: [
+            {left: "$$", right: "$$", display: true},
+            {left: "[%", right: "%]", display: true},
+            {left: "$", right: "$", display: false}
+        ]}
+        );
+    });
+    </script>
+
+
+<script>
+function wrap_img(fn) {
+    if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading") {
+        var elements = document.querySelectorAll(".post img");
+        Array.prototype.forEach.call(elements, function(el, i) {
+            if (el.getAttribute("title") && (el.className != "emoji")) {
+                const caption = document.createElement('figcaption');
+                var node = document.createTextNode(el.getAttribute("title"));
+                caption.appendChild(node);
+                const wrapper = document.createElement('figure');
+                wrapper.className = 'image';
+                el.parentNode.insertBefore(wrapper, el);
+                el.parentNode.removeChild(el);
+                wrapper.appendChild(el);
+                wrapper.appendChild(caption);
+            }
+        });
+    } else { document.addEventListener('DOMContentLoaded', fn); }
+}
+window.onload = wrap_img;
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function(){
+    // add link icon to anchor tags
+    var elem = document.querySelectorAll(".anchor-link")
+    elem.forEach(e => (e.innerHTML = '<i class="fas fa-link fa-xs"></i>'));
+    });
+</script>
+</head>
+<body><header class="site-header">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/blog/">//gardnmi</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/blog/about/">About Me</a><a class="page-link" href="/blog/search/">Search</a><a class="page-link" href="/blog/categories/">Tags</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Chaining in Pandas</h1><p class="page-description">Pandas chaining is an alternative to variable assignment when transforming data.  Those in favor of chaining argue that the code is easier to read because it lays out the execution of the transformation like a recipe.  In this post we will explore transforming the Titanic Dataset to prep it for machine learning using both chaining and variable transformation.</p><p class="post-meta post-meta-title"><time class="dt-published" datetime="2021-08-22T00:00:00-05:00" itemprop="datePublished">
+        Aug 22, 2021
+      </time>
+       • <span class="read-time" title="Estimated read time">
+    
+    
+      10 min read
+    
+</span></p>
+
+    
+      <p class="category-tags"><i class="fas fa-tags category-tags-icon"></i></i> 
+      
+        <a class="category-tags-link" href="/blog/categories/#jupyter">jupyter</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/blog/categories/#pandas">pandas</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/blog/categories/#python">python</a>
+        
+      
+      </p>
+    
+
+    
+      
+        <div class="pb-5 d-flex flex-wrap flex-justify-end">
+          <div class="px-2">
+
+    <a href="https://github.com/gardnmi/blog/tree/master/_notebooks/2021-08-22-chaining-in-pandas.ipynb" role="button" target="_blank">
+<img class="notebook-badge-image" src="/blog/assets/badges/github.svg" alt="View On GitHub">
+    </a>
+</div>
+
+          <div class="px-2">
+    <a href="https://mybinder.org/v2/gh/gardnmi/blog/master?filepath=_notebooks%2F2021-08-22-chaining-in-pandas.ipynb" target="_blank">
+        <img class="notebook-badge-image" src="/blog/assets/badges/binder.svg" alt="Open In Binder"/>
+    </a>
+</div>
+
+          <div class="px-2">
+    <a href="https://colab.research.google.com/github/gardnmi/blog/blob/master/_notebooks/2021-08-22-chaining-in-pandas.ipynb" target="_blank">
+        <img class="notebook-badge-image" src="/blog/assets/badges/colab.svg" alt="Open In Colab"/>
+    </a>
+</div>
+        </div>
+      </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <ul class="section-nav">
+<li class="toc-entry toc-h2"><a href="#Summary">Summary </a></li>
+</ul><!--
+#################################################
+### THIS FILE WAS AUTOGENERATED! DO NOT EDIT! ###
+#################################################
+# file to edit: _notebooks/2021-08-22-chaining-in-pandas.ipynb
+-->
+
+<div class="container" id="notebook-container">
+        
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Before we begin, we need to import both pandas and numpy as well as reading the titanic data from a csv file.  We will store the dataset in a variable called <code>raw_df</code> and copy it to the variable <code>df</code> before each example transformation.</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="n">raw_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">'https://raw.githubusercontent.com/pandas-dev/pandas/master/doc/data/titanic.csv'</span><span class="p">)</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">raw_df</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>PassengerId</th>
+      <th>Survived</th>
+      <th>Pclass</th>
+      <th>Name</th>
+      <th>Sex</th>
+      <th>Age</th>
+      <th>SibSp</th>
+      <th>Parch</th>
+      <th>Ticket</th>
+      <th>Fare</th>
+      <th>Cabin</th>
+      <th>Embarked</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1</td>
+      <td>0</td>
+      <td>3</td>
+      <td>Braund, Mr. Owen Harris</td>
+      <td>male</td>
+      <td>22.0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>A/5 21171</td>
+      <td>7.2500</td>
+      <td>NaN</td>
+      <td>S</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2</td>
+      <td>1</td>
+      <td>1</td>
+      <td>Cumings, Mrs. John Bradley (Florence Briggs Th...</td>
+      <td>female</td>
+      <td>38.0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>PC 17599</td>
+      <td>71.2833</td>
+      <td>C85</td>
+      <td>C</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>3</td>
+      <td>1</td>
+      <td>3</td>
+      <td>Heikkinen, Miss. Laina</td>
+      <td>female</td>
+      <td>26.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>STON/O2. 3101282</td>
+      <td>7.9250</td>
+      <td>NaN</td>
+      <td>S</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>4</td>
+      <td>1</td>
+      <td>1</td>
+      <td>Futrelle, Mrs. Jacques Heath (Lily May Peel)</td>
+      <td>female</td>
+      <td>35.0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>113803</td>
+      <td>53.1000</td>
+      <td>C123</td>
+      <td>S</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>5</td>
+      <td>0</td>
+      <td>3</td>
+      <td>Allen, Mr. William Henry</td>
+      <td>male</td>
+      <td>35.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>373450</td>
+      <td>8.0500</td>
+      <td>NaN</td>
+      <td>S</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>&lt;class 'pandas.core.frame.DataFrame'&gt;
+RangeIndex: 891 entries, 0 to 890
+Data columns (total 12 columns):
+ #   Column       Non-Null Count  Dtype  
+---  ------       --------------  -----  
+ 0   PassengerId  891 non-null    int64  
+ 1   Survived     891 non-null    int64  
+ 2   Pclass       891 non-null    int64  
+ 3   Name         891 non-null    object 
+ 4   Sex          891 non-null    object 
+ 5   Age          714 non-null    float64
+ 6   SibSp        891 non-null    int64  
+ 7   Parch        891 non-null    int64  
+ 8   Ticket       891 non-null    object 
+ 9   Fare         891 non-null    float64
+ 10  Cabin        204 non-null    object 
+ 11  Embarked     889 non-null    object 
+dtypes: float64(2), int64(5), object(5)
+memory usage: 83.7+ KB
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>After inspecting the data, we will begin our transformations.  The first steps will be adding <code>PassengerId</code> to the index and then converting <code>Sex</code> and <code>Cabin</code> to the <code>category</code> datatype.</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">raw_df</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">df</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">'PassengerId'</span><span class="p">)</span>
+<span class="n">df</span><span class="p">[</span><span class="s1">'Sex'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">Sex</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">'category'</span><span class="p">)</span>
+<span class="n">df</span><span class="p">[</span><span class="s1">'Cabin'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">Cabin</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">'category'</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The first big difference in chaining is that we need to rap our transformation in <code>()</code>.  The next difference is using a new method called <code>assign</code> to create or change existing columns.</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">raw_df</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">df</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">df</span>
+    <span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">'PassengerId'</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">Sex</span><span class="o">=</span><span class="n">df</span><span class="o">.</span><span class="n">Sex</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">'category'</span><span class="p">),</span>
+            <span class="n">Cabin</span><span class="o">=</span><span class="n">df</span><span class="o">.</span><span class="n">Cabin</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">'category'</span><span class="p">))</span>
+<span class="p">)</span>
+
+<span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Survived</th>
+      <th>Pclass</th>
+      <th>Name</th>
+      <th>Sex</th>
+      <th>Age</th>
+      <th>SibSp</th>
+      <th>Parch</th>
+      <th>Ticket</th>
+      <th>Fare</th>
+      <th>Cabin</th>
+      <th>Embarked</th>
+    </tr>
+    <tr>
+      <th>PassengerId</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>1</th>
+      <td>0</td>
+      <td>3</td>
+      <td>Braund, Mr. Owen Harris</td>
+      <td>female</td>
+      <td>22.0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>A/5 21171</td>
+      <td>7.2500</td>
+      <td>C85</td>
+      <td>S</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>1</td>
+      <td>1</td>
+      <td>Cumings, Mrs. John Bradley (Florence Briggs Th...</td>
+      <td>female</td>
+      <td>38.0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>PC 17599</td>
+      <td>71.2833</td>
+      <td>NaN</td>
+      <td>C</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>1</td>
+      <td>3</td>
+      <td>Heikkinen, Miss. Laina</td>
+      <td>female</td>
+      <td>26.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>STON/O2. 3101282</td>
+      <td>7.9250</td>
+      <td>C123</td>
+      <td>S</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>1</td>
+      <td>1</td>
+      <td>Futrelle, Mrs. Jacques Heath (Lily May Peel)</td>
+      <td>male</td>
+      <td>35.0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>113803</td>
+      <td>53.1000</td>
+      <td>NaN</td>
+      <td>S</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>0</td>
+      <td>3</td>
+      <td>Allen, Mr. William Henry</td>
+      <td>male</td>
+      <td>35.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>373450</td>
+      <td>8.0500</td>
+      <td>NaN</td>
+      <td>S</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Next, we want to extract the <code>Title</code> from the <code>Name</code> column and convert uncommon titles to either Ms, Mrs, Mr, or Rare.</p>
+<blockquote>
+<p>:<strong>attention:</strong> New code is added under ## NEW SECTION ##</p>
+</blockquote>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">raw_df</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">df</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">'PassengerId'</span><span class="p">)</span>
+<span class="n">df</span><span class="p">[</span><span class="s1">'Sex'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">Sex</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">'category'</span><span class="p">)</span>
+<span class="n">df</span><span class="p">[</span><span class="s1">'Cabin'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">Cabin</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">'category'</span><span class="p">)</span>
+
+<span class="c1">## NEW SECTION ##</span>
+<span class="n">df</span><span class="p">[</span><span class="s1">'Title'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">Name</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="s1">'([A-Za-z]+)\.'</span><span class="p">)</span>
+
+<span class="n">df</span><span class="p">[</span><span class="s1">'Title'</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">select</span><span class="p">(</span>
+    <span class="n">condlist</span><span class="o">=</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">Title</span><span class="o">.</span><span class="n">isin</span><span class="p">([</span><span class="s1">'Mlle'</span><span class="p">,</span> <span class="s1">'Ms'</span><span class="p">]),</span>
+              <span class="n">df</span><span class="o">.</span><span class="n">Title</span><span class="o">.</span><span class="n">isin</span><span class="p">([</span><span class="s1">'Mme'</span><span class="p">,</span> <span class="s1">'Mrs'</span><span class="p">]),</span>
+              <span class="n">df</span><span class="o">.</span><span class="n">Title</span><span class="o">.</span><span class="n">isin</span><span class="p">([</span><span class="s1">'Mr'</span><span class="p">])),</span>
+    <span class="n">choicelist</span><span class="o">=</span><span class="p">(</span><span class="s1">'Miss'</span><span class="p">,</span> <span class="s1">'Mrs'</span><span class="p">,</span> <span class="s1">'Mr'</span><span class="p">),</span>
+    <span class="n">default</span><span class="o">=</span><span class="s1">'Rare'</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>We are still using <code>assign</code> to create the new columns but there are items of note.  We are unable to have the same column name within a single <code>assign</code> method so we need to create a second <code>assign</code> method.  Also, because <code>Title</code> does not exist in the original dataframe we have to reference the current object with <code>lambda</code>.</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">raw_df</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">df</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">df</span>
+    <span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">Sex</span><span class="o">=</span><span class="n">df</span><span class="o">.</span><span class="n">Sex</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">'category'</span><span class="p">),</span>
+            <span class="n">Cabin</span><span class="o">=</span><span class="n">df</span><span class="o">.</span><span class="n">Cabin</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">'category'</span><span class="p">),</span>
+
+            <span class="c1">## NEW SECTION ##</span>
+            <span class="n">Title</span><span class="o">=</span><span class="n">df</span><span class="o">.</span><span class="n">Name</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="s1">'([A-Za-z]+)\.'</span><span class="p">))</span>
+    <span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">Title</span><span class="o">=</span><span class="k">lambda</span> <span class="n">df</span><span class="p">:</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">select</span><span class="p">(</span>
+                <span class="n">condlist</span><span class="o">=</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">Title</span><span class="o">.</span><span class="n">isin</span><span class="p">([</span><span class="s1">'Mlle'</span><span class="p">,</span> <span class="s1">'Ms'</span><span class="p">]),</span>
+                          <span class="n">df</span><span class="o">.</span><span class="n">Title</span><span class="o">.</span><span class="n">isin</span><span class="p">([</span><span class="s1">'Mme'</span><span class="p">,</span> <span class="s1">'Mrs'</span><span class="p">]),</span>
+                          <span class="n">df</span><span class="o">.</span><span class="n">Title</span><span class="o">.</span><span class="n">isin</span><span class="p">([</span><span class="s1">'Mr'</span><span class="p">])),</span>
+                <span class="n">choicelist</span><span class="o">=</span><span class="p">(</span><span class="s1">'Miss'</span><span class="p">,</span> <span class="s1">'Mrs'</span><span class="p">,</span> <span class="s1">'Mr'</span><span class="p">),</span>
+                <span class="n">default</span><span class="o">=</span><span class="s1">'Rare'</span><span class="p">))</span>
+<span class="p">)</span>
+
+<span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>PassengerId</th>
+      <th>Survived</th>
+      <th>Pclass</th>
+      <th>Name</th>
+      <th>Sex</th>
+      <th>Age</th>
+      <th>SibSp</th>
+      <th>Parch</th>
+      <th>Ticket</th>
+      <th>Fare</th>
+      <th>Cabin</th>
+      <th>Embarked</th>
+      <th>Title</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1</td>
+      <td>0</td>
+      <td>3</td>
+      <td>Braund, Mr. Owen Harris</td>
+      <td>male</td>
+      <td>22.0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>A/5 21171</td>
+      <td>7.2500</td>
+      <td>NaN</td>
+      <td>S</td>
+      <td>Mr</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2</td>
+      <td>1</td>
+      <td>1</td>
+      <td>Cumings, Mrs. John Bradley (Florence Briggs Th...</td>
+      <td>female</td>
+      <td>38.0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>PC 17599</td>
+      <td>71.2833</td>
+      <td>C85</td>
+      <td>C</td>
+      <td>Mrs</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>3</td>
+      <td>1</td>
+      <td>3</td>
+      <td>Heikkinen, Miss. Laina</td>
+      <td>female</td>
+      <td>26.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>STON/O2. 3101282</td>
+      <td>7.9250</td>
+      <td>NaN</td>
+      <td>S</td>
+      <td>Rare</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>4</td>
+      <td>1</td>
+      <td>1</td>
+      <td>Futrelle, Mrs. Jacques Heath (Lily May Peel)</td>
+      <td>female</td>
+      <td>35.0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>113803</td>
+      <td>53.1000</td>
+      <td>C123</td>
+      <td>S</td>
+      <td>Mrs</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>5</td>
+      <td>0</td>
+      <td>3</td>
+      <td>Allen, Mr. William Henry</td>
+      <td>male</td>
+      <td>35.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>373450</td>
+      <td>8.0500</td>
+      <td>NaN</td>
+      <td>S</td>
+      <td>Mr</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The next three transformations will be to bin <code>Age</code> and <code>Category</code>, convert them to a category datatype, and drop columns we will not use in our machine learning model.</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">raw_df</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">df</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">'PassengerId'</span><span class="p">)</span>
+<span class="n">df</span><span class="p">[</span><span class="s1">'Sex'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">Sex</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">'category'</span><span class="p">)</span>
+<span class="n">df</span><span class="p">[</span><span class="s1">'Cabin'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">Cabin</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">'category'</span><span class="p">)</span>
+<span class="n">df</span><span class="p">[</span><span class="s1">'Title'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">Name</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="s1">'([A-Za-z]+)\.'</span><span class="p">)</span>
+
+<span class="n">df</span><span class="p">[</span><span class="s1">'Title'</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">select</span><span class="p">(</span>
+    <span class="n">condlist</span><span class="o">=</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">Title</span><span class="o">.</span><span class="n">isin</span><span class="p">([</span><span class="s1">'Mlle'</span><span class="p">,</span> <span class="s1">'Ms'</span><span class="p">]),</span>
+              <span class="n">df</span><span class="o">.</span><span class="n">Title</span><span class="o">.</span><span class="n">isin</span><span class="p">([</span><span class="s1">'Mme'</span><span class="p">,</span> <span class="s1">'Mrs'</span><span class="p">]),</span>
+              <span class="n">df</span><span class="o">.</span><span class="n">Title</span><span class="o">.</span><span class="n">isin</span><span class="p">([</span><span class="s1">'Mr'</span><span class="p">])),</span>
+    <span class="n">choicelist</span><span class="o">=</span><span class="p">(</span><span class="s1">'Miss'</span><span class="p">,</span> <span class="s1">'Mrs'</span><span class="p">,</span> <span class="s1">'Mr'</span><span class="p">),</span>
+    <span class="n">default</span><span class="o">=</span><span class="s1">'Rare'</span><span class="p">)</span>
+
+<span class="c1">## NEW SECTION ##</span>
+<span class="n">df</span><span class="p">[</span><span class="s1">'Age_bin'</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">cut</span><span class="p">(</span>
+    <span class="n">df</span><span class="p">[</span><span class="s1">'Age'</span><span class="p">],</span>
+    <span class="n">bins</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">120</span><span class="p">],</span>
+    <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">'Children'</span><span class="p">,</span> <span class="s1">'Teenage'</span><span class="p">,</span> <span class="s1">'Adult'</span><span class="p">,</span> <span class="s1">'Elder'</span><span class="p">])</span>
+
+<span class="n">df</span><span class="p">[</span><span class="s1">'Fare_bin'</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">cut</span><span class="p">(</span>
+    <span class="n">df</span><span class="p">[</span><span class="s1">'Fare'</span><span class="p">],</span>
+    <span class="n">bins</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mf">7.91</span><span class="p">,</span> <span class="mf">14.45</span><span class="p">,</span> <span class="mi">31</span><span class="p">,</span> <span class="mi">120</span><span class="p">],</span>
+    <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">'Low_fare'</span><span class="p">,</span> <span class="s1">'median_fare'</span><span class="p">,</span> <span class="s1">'Average_fare'</span><span class="p">,</span> <span class="s1">'high_fare'</span><span class="p">])</span>
+
+<span class="n">df</span><span class="p">[</span><span class="s1">'Age_bin'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">Age_bin</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">'category'</span><span class="p">)</span>
+<span class="n">df</span><span class="p">[</span><span class="s1">'Fare_bin'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">Fare_bin</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">'category'</span><span class="p">)</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s1">'Age'</span><span class="p">,</span> <span class="s1">'Fare'</span><span class="p">,</span> <span class="s1">'Name'</span><span class="p">,</span> <span class="s1">'Ticket'</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>We are continuing to use <code>assign</code> to create our columns.  Note how we have to introduce a third <code>assign</code> method to categorize <code>Age_bin</code> and <code>Fare_bin</code> into categories since those columns are already referenced in the previous <code>assign</code>.</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">raw_df</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">df</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">df</span>
+    <span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">'PassengerId'</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">assign</span><span class="p">(</span>
+        <span class="n">Title</span><span class="o">=</span><span class="n">df</span><span class="o">.</span><span class="n">Name</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="s1">'([A-Za-z]+)\.'</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">Title</span><span class="o">=</span><span class="k">lambda</span> <span class="n">df</span><span class="p">:</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">select</span><span class="p">(</span>
+                <span class="n">condlist</span><span class="o">=</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">Title</span><span class="o">.</span><span class="n">isin</span><span class="p">([</span><span class="s1">'Mlle'</span><span class="p">,</span> <span class="s1">'Ms'</span><span class="p">]),</span>
+                          <span class="n">df</span><span class="o">.</span><span class="n">Title</span><span class="o">.</span><span class="n">isin</span><span class="p">([</span><span class="s1">'Mme'</span><span class="p">,</span> <span class="s1">'Mrs'</span><span class="p">]),</span>
+                          <span class="n">df</span><span class="o">.</span><span class="n">Title</span><span class="o">.</span><span class="n">isin</span><span class="p">([</span><span class="s1">'Mr'</span><span class="p">])),</span>
+                <span class="n">choicelist</span><span class="o">=</span><span class="p">(</span><span class="s1">'Miss'</span><span class="p">,</span> <span class="s1">'Mrs'</span><span class="p">,</span> <span class="s1">'Mr'</span><span class="p">),</span>
+                <span class="n">default</span><span class="o">=</span><span class="s1">'Rare'</span><span class="p">),</span>
+
+            <span class="c1">## NEW SECTION ##</span>
+            <span class="n">Age_bin</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">cut</span><span class="p">(</span>
+                <span class="n">df</span><span class="p">[</span><span class="s1">'Age'</span><span class="p">],</span>
+                <span class="n">bins</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">120</span><span class="p">],</span>
+                <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">'Children'</span><span class="p">,</span> <span class="s1">'Teenage'</span><span class="p">,</span> <span class="s1">'Adult'</span><span class="p">,</span> <span class="s1">'Elder'</span><span class="p">]),</span>
+
+            <span class="n">Fare_bin</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">cut</span><span class="p">(</span>
+                <span class="n">df</span><span class="p">[</span><span class="s1">'Fare'</span><span class="p">],</span>
+                <span class="n">bins</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mf">7.91</span><span class="p">,</span> <span class="mf">14.45</span><span class="p">,</span> <span class="mi">31</span><span class="p">,</span> <span class="mi">120</span><span class="p">],</span>
+                <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">'Low_fare'</span><span class="p">,</span> <span class="s1">'median_fare'</span><span class="p">,</span> <span class="s1">'Average_fare'</span><span class="p">,</span> <span class="s1">'high_fare'</span><span class="p">])</span>
+            <span class="p">)</span>
+    <span class="o">.</span><span class="n">assign</span><span class="p">(</span>
+        <span class="n">Age_bin</span><span class="o">=</span><span class="k">lambda</span> <span class="n">df</span><span class="p">:</span> <span class="n">df</span><span class="o">.</span><span class="n">Age_bin</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">'category'</span><span class="p">),</span>
+        <span class="n">Fare_bin</span><span class="o">=</span><span class="k">lambda</span> <span class="n">df</span><span class="p">:</span> <span class="n">df</span><span class="o">.</span><span class="n">Fare_bin</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">'category'</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s1">'Age'</span><span class="p">,</span> <span class="s1">'Fare'</span><span class="p">,</span> <span class="s1">'Name'</span><span class="p">,</span> <span class="s1">'Ticket'</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="p">)</span>
+
+<span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Survived</th>
+      <th>Pclass</th>
+      <th>Sex</th>
+      <th>SibSp</th>
+      <th>Parch</th>
+      <th>Cabin</th>
+      <th>Embarked</th>
+      <th>Title</th>
+      <th>Age_bin</th>
+      <th>Fare_bin</th>
+    </tr>
+    <tr>
+      <th>PassengerId</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>1</th>
+      <td>0</td>
+      <td>3</td>
+      <td>male</td>
+      <td>1</td>
+      <td>0</td>
+      <td>NaN</td>
+      <td>S</td>
+      <td>Mrs</td>
+      <td>Adult</td>
+      <td>high_fare</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>1</td>
+      <td>1</td>
+      <td>female</td>
+      <td>1</td>
+      <td>0</td>
+      <td>C85</td>
+      <td>C</td>
+      <td>Rare</td>
+      <td>Adult</td>
+      <td>median_fare</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>1</td>
+      <td>3</td>
+      <td>female</td>
+      <td>0</td>
+      <td>0</td>
+      <td>NaN</td>
+      <td>S</td>
+      <td>Mrs</td>
+      <td>Adult</td>
+      <td>high_fare</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>1</td>
+      <td>1</td>
+      <td>female</td>
+      <td>1</td>
+      <td>0</td>
+      <td>C123</td>
+      <td>S</td>
+      <td>Mr</td>
+      <td>Adult</td>
+      <td>median_fare</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>0</td>
+      <td>3</td>
+      <td>male</td>
+      <td>0</td>
+      <td>0</td>
+      <td>NaN</td>
+      <td>S</td>
+      <td>Mr</td>
+      <td>NaN</td>
+      <td>median_fare</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>To demonstrate how to filter a dataframe while chaining we will filter for only non survivors.</p>
+<blockquote>
+<p>:<strong>attention:</strong> A non survivor is labeled as 0 in the <code>Survived</code> column</p>
+</blockquote>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">raw_df</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">'PassengerId'</span><span class="p">)</span>
+<span class="n">df</span><span class="p">[</span><span class="s1">'Sex'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">Sex</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">'category'</span><span class="p">)</span>
+<span class="n">df</span><span class="p">[</span><span class="s1">'Cabin'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">Cabin</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">'category'</span><span class="p">)</span>
+<span class="n">df</span><span class="p">[</span><span class="s1">'Title'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">Name</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="s1">'([A-Za-z]+)\.'</span><span class="p">)</span>
+
+<span class="n">df</span><span class="p">[</span><span class="s1">'Title'</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">select</span><span class="p">(</span>
+    <span class="n">condlist</span><span class="o">=</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">Title</span><span class="o">.</span><span class="n">isin</span><span class="p">([</span><span class="s1">'Mlle'</span><span class="p">,</span> <span class="s1">'Ms'</span><span class="p">]),</span>
+              <span class="n">df</span><span class="o">.</span><span class="n">Title</span><span class="o">.</span><span class="n">isin</span><span class="p">([</span><span class="s1">'Mme'</span><span class="p">,</span> <span class="s1">'Mrs'</span><span class="p">]),</span>
+              <span class="n">df</span><span class="o">.</span><span class="n">Title</span><span class="o">.</span><span class="n">isin</span><span class="p">([</span><span class="s1">'Mr'</span><span class="p">])),</span>
+    <span class="n">choicelist</span><span class="o">=</span><span class="p">(</span><span class="s1">'Miss'</span><span class="p">,</span> <span class="s1">'Mrs'</span><span class="p">,</span> <span class="s1">'Mr'</span><span class="p">),</span>
+    <span class="n">default</span><span class="o">=</span><span class="s1">'Rare'</span><span class="p">)</span>
+
+<span class="n">df</span><span class="p">[</span><span class="s1">'Age_bin'</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">cut</span><span class="p">(</span>
+    <span class="n">df</span><span class="p">[</span><span class="s1">'Age'</span><span class="p">],</span>
+    <span class="n">bins</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">120</span><span class="p">],</span>
+    <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">'Children'</span><span class="p">,</span> <span class="s1">'Teenage'</span><span class="p">,</span> <span class="s1">'Adult'</span><span class="p">,</span> <span class="s1">'Elder'</span><span class="p">])</span>
+
+<span class="n">df</span><span class="p">[</span><span class="s1">'Fare_bin'</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">cut</span><span class="p">(</span>
+    <span class="n">df</span><span class="p">[</span><span class="s1">'Fare'</span><span class="p">],</span>
+    <span class="n">bins</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mf">7.91</span><span class="p">,</span> <span class="mf">14.45</span><span class="p">,</span> <span class="mi">31</span><span class="p">,</span> <span class="mi">120</span><span class="p">],</span>
+    <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">'Low_fare'</span><span class="p">,</span> <span class="s1">'median_fare'</span><span class="p">,</span> <span class="s1">'Average_fare'</span><span class="p">,</span> <span class="s1">'high_fare'</span><span class="p">])</span>
+
+<span class="n">df</span><span class="p">[</span><span class="s1">'Age_bin'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">Age_bin</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">'category'</span><span class="p">)</span>
+<span class="n">df</span><span class="p">[</span><span class="s1">'Fare_bin'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">Fare_bin</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">'category'</span><span class="p">)</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s1">'Age'</span><span class="p">,</span> <span class="s1">'Fare'</span><span class="p">,</span> <span class="s1">'Name'</span><span class="p">,</span> <span class="s1">'Ticket'</span><span class="p">,</span> <span class="s1">'Cabin'</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="c1">## NEW SECTION ##</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">Survived</span><span class="o">.</span><span class="n">eq</span><span class="p">(</span><span class="mi">0</span><span class="p">)]</span>  <span class="c1"># or df.Survived == 0</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">raw_df</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">df</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">df</span>
+    <span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">'PassengerId'</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">assign</span><span class="p">(</span>
+        <span class="n">Title</span><span class="o">=</span><span class="n">df</span><span class="o">.</span><span class="n">Name</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="s1">'([A-Za-z]+)\.'</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">Title</span><span class="o">=</span><span class="k">lambda</span> <span class="n">df</span><span class="p">:</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">select</span><span class="p">(</span>
+                <span class="n">condlist</span><span class="o">=</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">Title</span><span class="o">.</span><span class="n">isin</span><span class="p">([</span><span class="s1">'Mlle'</span><span class="p">,</span> <span class="s1">'Ms'</span><span class="p">]),</span>
+                          <span class="n">df</span><span class="o">.</span><span class="n">Title</span><span class="o">.</span><span class="n">isin</span><span class="p">([</span><span class="s1">'Mme'</span><span class="p">,</span> <span class="s1">'Mrs'</span><span class="p">]),</span>
+                          <span class="n">df</span><span class="o">.</span><span class="n">Title</span><span class="o">.</span><span class="n">isin</span><span class="p">([</span><span class="s1">'Mr'</span><span class="p">])),</span>
+                <span class="n">choicelist</span><span class="o">=</span><span class="p">(</span><span class="s1">'Miss'</span><span class="p">,</span> <span class="s1">'Mrs'</span><span class="p">,</span> <span class="s1">'Mr'</span><span class="p">),</span>
+                <span class="n">default</span><span class="o">=</span><span class="s1">'Rare'</span><span class="p">),</span>
+
+            <span class="n">Age_bin</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">cut</span><span class="p">(</span>
+                <span class="n">df</span><span class="p">[</span><span class="s1">'Age'</span><span class="p">],</span>
+                <span class="n">bins</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">120</span><span class="p">],</span>
+                <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">'Children'</span><span class="p">,</span> <span class="s1">'Teenage'</span><span class="p">,</span> <span class="s1">'Adult'</span><span class="p">,</span> <span class="s1">'Elder'</span><span class="p">]),</span>
+
+            <span class="n">Fare_bin</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">cut</span><span class="p">(</span>
+                <span class="n">df</span><span class="p">[</span><span class="s1">'Fare'</span><span class="p">],</span>
+                <span class="n">bins</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mf">7.91</span><span class="p">,</span> <span class="mf">14.45</span><span class="p">,</span> <span class="mi">31</span><span class="p">,</span> <span class="mi">120</span><span class="p">],</span>
+                <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">'Low_fare'</span><span class="p">,</span> <span class="s1">'median_fare'</span><span class="p">,</span> <span class="s1">'Average_fare'</span><span class="p">,</span> <span class="s1">'high_fare'</span><span class="p">])</span>
+            <span class="p">)</span>
+    <span class="o">.</span><span class="n">assign</span><span class="p">(</span>
+        <span class="n">Age_bin</span><span class="o">=</span><span class="k">lambda</span> <span class="n">df</span><span class="p">:</span> <span class="n">df</span><span class="o">.</span><span class="n">Age_bin</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">'category'</span><span class="p">),</span>
+        <span class="n">Fare_bin</span><span class="o">=</span><span class="k">lambda</span> <span class="n">df</span><span class="p">:</span> <span class="n">df</span><span class="o">.</span><span class="n">Fare_bin</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">'category'</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s1">'Age'</span><span class="p">,</span> <span class="s1">'Fare'</span><span class="p">,</span> <span class="s1">'Name'</span><span class="p">,</span> <span class="s1">'Ticket'</span><span class="p">,</span> <span class="s1">'Cabin'</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="c1">## NEW SECTION ##</span>
+    <span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s1">'Survived == 0'</span><span class="p">)</span> <span class="c1"># .loc/iloc is also an option</span>
+
+<span class="p">)</span>
+
+<span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Survived</th>
+      <th>Pclass</th>
+      <th>Sex</th>
+      <th>SibSp</th>
+      <th>Parch</th>
+      <th>Embarked</th>
+      <th>Title</th>
+      <th>Age_bin</th>
+      <th>Fare_bin</th>
+    </tr>
+    <tr>
+      <th>PassengerId</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>1</th>
+      <td>0</td>
+      <td>3</td>
+      <td>male</td>
+      <td>1</td>
+      <td>0</td>
+      <td>S</td>
+      <td>Mrs</td>
+      <td>Adult</td>
+      <td>high_fare</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>0</td>
+      <td>3</td>
+      <td>male</td>
+      <td>0</td>
+      <td>0</td>
+      <td>S</td>
+      <td>Mr</td>
+      <td>NaN</td>
+      <td>median_fare</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>0</td>
+      <td>3</td>
+      <td>male</td>
+      <td>0</td>
+      <td>0</td>
+      <td>Q</td>
+      <td>Mr</td>
+      <td>Elder</td>
+      <td>high_fare</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>0</td>
+      <td>1</td>
+      <td>male</td>
+      <td>0</td>
+      <td>0</td>
+      <td>S</td>
+      <td>Rare</td>
+      <td>Children</td>
+      <td>Average_fare</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>0</td>
+      <td>3</td>
+      <td>male</td>
+      <td>3</td>
+      <td>1</td>
+      <td>S</td>
+      <td>Mrs</td>
+      <td>Adult</td>
+      <td>median_fare</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The final step in our transformation is to convert our categorical data into dummy variables.</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">raw_df</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">df</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">'PassengerId'</span><span class="p">)</span>
+<span class="n">df</span><span class="p">[</span><span class="s1">'Cabin'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">Cabin</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">'category'</span><span class="p">)</span>
+<span class="n">df</span><span class="p">[</span><span class="s1">'Title'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">Name</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="s1">'([A-Za-z]+)\.'</span><span class="p">)</span>
+
+<span class="n">df</span><span class="p">[</span><span class="s1">'Title'</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">select</span><span class="p">(</span>
+    <span class="n">condlist</span><span class="o">=</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">Title</span><span class="o">.</span><span class="n">isin</span><span class="p">([</span><span class="s1">'Mlle'</span><span class="p">,</span> <span class="s1">'Ms'</span><span class="p">]),</span>
+              <span class="n">df</span><span class="o">.</span><span class="n">Title</span><span class="o">.</span><span class="n">isin</span><span class="p">([</span><span class="s1">'Mme'</span><span class="p">,</span> <span class="s1">'Mrs'</span><span class="p">]),</span>
+              <span class="n">df</span><span class="o">.</span><span class="n">Title</span><span class="o">.</span><span class="n">isin</span><span class="p">([</span><span class="s1">'Mr'</span><span class="p">])),</span>
+    <span class="n">choicelist</span><span class="o">=</span><span class="p">(</span><span class="s1">'Miss'</span><span class="p">,</span> <span class="s1">'Mrs'</span><span class="p">,</span> <span class="s1">'Mr'</span><span class="p">),</span>
+    <span class="n">default</span><span class="o">=</span><span class="s1">'Rare'</span><span class="p">)</span>
+
+<span class="n">df</span><span class="p">[</span><span class="s1">'Age_bin'</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">cut</span><span class="p">(</span>
+    <span class="n">df</span><span class="p">[</span><span class="s1">'Age'</span><span class="p">],</span>
+    <span class="n">bins</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">120</span><span class="p">],</span>
+    <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">'Children'</span><span class="p">,</span> <span class="s1">'Teenage'</span><span class="p">,</span> <span class="s1">'Adult'</span><span class="p">,</span> <span class="s1">'Elder'</span><span class="p">])</span>
+
+<span class="n">df</span><span class="p">[</span><span class="s1">'Fare_bin'</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">cut</span><span class="p">(</span>
+    <span class="n">df</span><span class="p">[</span><span class="s1">'Fare'</span><span class="p">],</span>
+    <span class="n">bins</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mf">7.91</span><span class="p">,</span> <span class="mf">14.45</span><span class="p">,</span> <span class="mi">31</span><span class="p">,</span> <span class="mi">120</span><span class="p">],</span>
+    <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">'Low_fare'</span><span class="p">,</span> <span class="s1">'median_fare'</span><span class="p">,</span> <span class="s1">'Average_fare'</span><span class="p">,</span> <span class="s1">'high_fare'</span><span class="p">])</span>
+
+<span class="n">df</span><span class="p">[</span><span class="s1">'Age_bin'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">Age_bin</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">'category'</span><span class="p">)</span>
+<span class="n">df</span><span class="p">[</span><span class="s1">'Fare_bin'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">Fare_bin</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">'category'</span><span class="p">)</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s1">'Age'</span><span class="p">,</span> <span class="s1">'Fare'</span><span class="p">,</span> <span class="s1">'Name'</span><span class="p">,</span> <span class="s1">'Ticket'</span><span class="p">,</span> <span class="s1">'Cabin'</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">Survived</span><span class="o">.</span><span class="n">eq</span><span class="p">(</span><span class="mi">0</span><span class="p">)]</span>  <span class="c1"># or df.Survived == 0</span>
+
+<span class="c1">## NEW SECTION ##</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">get_dummies</span><span class="p">(</span>
+    <span class="n">df</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">"Sex"</span><span class="p">,</span> <span class="s2">"Title"</span><span class="p">,</span> <span class="s2">"Age_bin"</span><span class="p">,</span> <span class="s2">"Embarked"</span><span class="p">,</span> <span class="s2">"Fare_bin"</span><span class="p">])</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The <code>pipe</code> method is used when you have a function that takes your dataframe as an argument such as <code>pd.get_dummies</code>.</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">raw_df</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">df</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">df</span>
+    <span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">'PassengerId'</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">assign</span><span class="p">(</span>
+        <span class="n">Title</span><span class="o">=</span><span class="n">df</span><span class="o">.</span><span class="n">Name</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="s1">'([A-Za-z]+)\.'</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">Title</span><span class="o">=</span><span class="k">lambda</span> <span class="n">df</span><span class="p">:</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">select</span><span class="p">(</span>
+                <span class="n">condlist</span><span class="o">=</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">Title</span><span class="o">.</span><span class="n">isin</span><span class="p">([</span><span class="s1">'Mlle'</span><span class="p">,</span> <span class="s1">'Ms'</span><span class="p">]),</span>
+                          <span class="n">df</span><span class="o">.</span><span class="n">Title</span><span class="o">.</span><span class="n">isin</span><span class="p">([</span><span class="s1">'Mme'</span><span class="p">,</span> <span class="s1">'Mrs'</span><span class="p">]),</span>
+                          <span class="n">df</span><span class="o">.</span><span class="n">Title</span><span class="o">.</span><span class="n">isin</span><span class="p">([</span><span class="s1">'Mr'</span><span class="p">])),</span>
+                <span class="n">choicelist</span><span class="o">=</span><span class="p">(</span><span class="s1">'Miss'</span><span class="p">,</span> <span class="s1">'Mrs'</span><span class="p">,</span> <span class="s1">'Mr'</span><span class="p">),</span>
+                <span class="n">default</span><span class="o">=</span><span class="s1">'Rare'</span><span class="p">),</span>
+
+            <span class="n">Age_bin</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">cut</span><span class="p">(</span>
+                <span class="n">df</span><span class="p">[</span><span class="s1">'Age'</span><span class="p">],</span>
+                <span class="n">bins</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">120</span><span class="p">],</span>
+                <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">'Children'</span><span class="p">,</span> <span class="s1">'Teenage'</span><span class="p">,</span> <span class="s1">'Adult'</span><span class="p">,</span> <span class="s1">'Elder'</span><span class="p">]),</span>
+
+            <span class="n">Fare_bin</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">cut</span><span class="p">(</span>
+                <span class="n">df</span><span class="p">[</span><span class="s1">'Fare'</span><span class="p">],</span>
+                <span class="n">bins</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mf">7.91</span><span class="p">,</span> <span class="mf">14.45</span><span class="p">,</span> <span class="mi">31</span><span class="p">,</span> <span class="mi">120</span><span class="p">],</span>
+                <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">'Low_fare'</span><span class="p">,</span> <span class="s1">'median_fare'</span><span class="p">,</span> <span class="s1">'Average_fare'</span><span class="p">,</span> <span class="s1">'high_fare'</span><span class="p">])</span>
+            <span class="p">)</span>
+    <span class="o">.</span><span class="n">assign</span><span class="p">(</span>
+        <span class="n">Age_bin</span><span class="o">=</span><span class="k">lambda</span> <span class="n">df</span><span class="p">:</span> <span class="n">df</span><span class="o">.</span><span class="n">Age_bin</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">'category'</span><span class="p">),</span>
+        <span class="n">Fare_bin</span><span class="o">=</span><span class="k">lambda</span> <span class="n">df</span><span class="p">:</span> <span class="n">df</span><span class="o">.</span><span class="n">Fare_bin</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">'category'</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s1">'Age'</span><span class="p">,</span> <span class="s1">'Fare'</span><span class="p">,</span> <span class="s1">'Name'</span><span class="p">,</span> <span class="s1">'Ticket'</span><span class="p">,</span> <span class="s1">'Cabin'</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s1">'Survived == 0'</span><span class="p">)</span>
+
+    <span class="c1">## NEW SECTION ##</span>
+    <span class="o">.</span><span class="n">pipe</span><span class="p">(</span><span class="k">lambda</span> <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">get_dummies</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">"Sex"</span><span class="p">,</span> <span class="s2">"Title"</span><span class="p">,</span> <span class="s2">"Age_bin"</span><span class="p">,</span> <span class="s2">"Embarked"</span><span class="p">,</span> <span class="s2">"Fare_bin"</span><span class="p">]))</span>
+
+<span class="p">)</span>
+
+<span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Survived</th>
+      <th>Pclass</th>
+      <th>SibSp</th>
+      <th>Parch</th>
+      <th>Sex_female</th>
+      <th>Sex_male</th>
+      <th>Title_Miss</th>
+      <th>Title_Mr</th>
+      <th>Title_Mrs</th>
+      <th>Title_Rare</th>
+      <th>...</th>
+      <th>Age_bin_Teenage</th>
+      <th>Age_bin_Adult</th>
+      <th>Age_bin_Elder</th>
+      <th>Embarked_C</th>
+      <th>Embarked_Q</th>
+      <th>Embarked_S</th>
+      <th>Fare_bin_Low_fare</th>
+      <th>Fare_bin_median_fare</th>
+      <th>Fare_bin_Average_fare</th>
+      <th>Fare_bin_high_fare</th>
+    </tr>
+    <tr>
+      <th>PassengerId</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>1</th>
+      <td>0</td>
+      <td>3</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>0</td>
+      <td>3</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>0</td>
+      <td>3</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>0</td>
+      <td>3</td>
+      <td>3</td>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table>
+<p>5 rows × 21 columns</p>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>When I have completed coding all the transformation, I like to wrap them into a function that I can use to convently apply the transformation steps to the data.</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">variable_transform</span><span class="p">(</span><span class="n">raw_df</span><span class="p">):</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">raw_df</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    
+    <span class="n">df</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">'PassengerId'</span><span class="p">)</span>
+    <span class="n">df</span><span class="p">[</span><span class="s1">'Cabin'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">Cabin</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">'category'</span><span class="p">)</span>
+    <span class="n">df</span><span class="p">[</span><span class="s1">'Title'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">Name</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="s1">'([A-Za-z]+)\.'</span><span class="p">)</span>
+
+    <span class="n">df</span><span class="p">[</span><span class="s1">'Title'</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">select</span><span class="p">(</span>
+        <span class="n">condlist</span><span class="o">=</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">Title</span><span class="o">.</span><span class="n">isin</span><span class="p">([</span><span class="s1">'Mlle'</span><span class="p">,</span> <span class="s1">'Ms'</span><span class="p">]),</span>
+                <span class="n">df</span><span class="o">.</span><span class="n">Title</span><span class="o">.</span><span class="n">isin</span><span class="p">([</span><span class="s1">'Mme'</span><span class="p">,</span> <span class="s1">'Mrs'</span><span class="p">]),</span>
+                <span class="n">df</span><span class="o">.</span><span class="n">Title</span><span class="o">.</span><span class="n">isin</span><span class="p">([</span><span class="s1">'Mr'</span><span class="p">])),</span>
+        <span class="n">choicelist</span><span class="o">=</span><span class="p">(</span><span class="s1">'Miss'</span><span class="p">,</span> <span class="s1">'Mrs'</span><span class="p">,</span> <span class="s1">'Mr'</span><span class="p">),</span>
+        <span class="n">default</span><span class="o">=</span><span class="s1">'Rare'</span><span class="p">)</span>
+
+    <span class="n">df</span><span class="p">[</span><span class="s1">'Age_bin'</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">cut</span><span class="p">(</span>
+        <span class="n">df</span><span class="p">[</span><span class="s1">'Age'</span><span class="p">],</span>
+        <span class="n">bins</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">120</span><span class="p">],</span>
+        <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">'Children'</span><span class="p">,</span> <span class="s1">'Teenage'</span><span class="p">,</span> <span class="s1">'Adult'</span><span class="p">,</span> <span class="s1">'Elder'</span><span class="p">])</span>
+
+    <span class="n">df</span><span class="p">[</span><span class="s1">'Fare_bin'</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">cut</span><span class="p">(</span>
+        <span class="n">df</span><span class="p">[</span><span class="s1">'Fare'</span><span class="p">],</span>
+        <span class="n">bins</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mf">7.91</span><span class="p">,</span> <span class="mf">14.45</span><span class="p">,</span> <span class="mi">31</span><span class="p">,</span> <span class="mi">120</span><span class="p">],</span>
+        <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">'Low_fare'</span><span class="p">,</span> <span class="s1">'median_fare'</span><span class="p">,</span> <span class="s1">'Average_fare'</span><span class="p">,</span> <span class="s1">'high_fare'</span><span class="p">])</span>
+
+    <span class="n">df</span><span class="p">[</span><span class="s1">'Age_bin'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">Age_bin</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">'category'</span><span class="p">)</span>
+    <span class="n">df</span><span class="p">[</span><span class="s1">'Fare_bin'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">Fare_bin</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">'category'</span><span class="p">)</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s1">'Age'</span><span class="p">,</span> <span class="s1">'Fare'</span><span class="p">,</span> <span class="s1">'Name'</span><span class="p">,</span> <span class="s1">'Ticket'</span><span class="p">,</span> <span class="s1">'Cabin'</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">Survived</span><span class="o">.</span><span class="n">eq</span><span class="p">(</span><span class="mi">0</span><span class="p">)]</span>  <span class="c1"># or df.Survived == 0</span>
+
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">get_dummies</span><span class="p">(</span>
+        <span class="n">df</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">"Sex"</span><span class="p">,</span> <span class="s2">"Title"</span><span class="p">,</span> <span class="s2">"Age_bin"</span><span class="p">,</span> <span class="s2">"Embarked"</span><span class="p">,</span> <span class="s2">"Fare_bin"</span><span class="p">])</span>
+
+    <span class="k">return</span> <span class="n">df</span>
+
+
+<span class="k">def</span> <span class="nf">chain_transform</span><span class="p">(</span><span class="n">raw_df</span><span class="p">):</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">raw_df</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+    <span class="n">df</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">df</span>
+        <span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">'PassengerId'</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">assign</span><span class="p">(</span>
+            <span class="n">Title</span><span class="o">=</span><span class="n">df</span><span class="o">.</span><span class="n">Name</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="s1">'([A-Za-z]+)\.'</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">Title</span><span class="o">=</span><span class="k">lambda</span> <span class="n">df</span><span class="p">:</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">select</span><span class="p">(</span>
+                    <span class="n">condlist</span><span class="o">=</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">Title</span><span class="o">.</span><span class="n">isin</span><span class="p">([</span><span class="s1">'Mlle'</span><span class="p">,</span> <span class="s1">'Ms'</span><span class="p">]),</span>
+                              <span class="n">df</span><span class="o">.</span><span class="n">Title</span><span class="o">.</span><span class="n">isin</span><span class="p">([</span><span class="s1">'Mme'</span><span class="p">,</span> <span class="s1">'Mrs'</span><span class="p">]),</span>
+                              <span class="n">df</span><span class="o">.</span><span class="n">Title</span><span class="o">.</span><span class="n">isin</span><span class="p">([</span><span class="s1">'Mr'</span><span class="p">])),</span>
+                    <span class="n">choicelist</span><span class="o">=</span><span class="p">(</span><span class="s1">'Miss'</span><span class="p">,</span> <span class="s1">'Mrs'</span><span class="p">,</span> <span class="s1">'Mr'</span><span class="p">),</span>
+                    <span class="n">default</span><span class="o">=</span><span class="s1">'Rare'</span><span class="p">),</span>
+
+                <span class="n">Age_bin</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">cut</span><span class="p">(</span>
+                    <span class="n">df</span><span class="p">[</span><span class="s1">'Age'</span><span class="p">],</span>
+                    <span class="n">bins</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">120</span><span class="p">],</span>
+                    <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">'Children'</span><span class="p">,</span> <span class="s1">'Teenage'</span><span class="p">,</span> <span class="s1">'Adult'</span><span class="p">,</span> <span class="s1">'Elder'</span><span class="p">]),</span>
+
+                <span class="n">Fare_bin</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">cut</span><span class="p">(</span>
+                    <span class="n">df</span><span class="p">[</span><span class="s1">'Fare'</span><span class="p">],</span>
+                    <span class="n">bins</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mf">7.91</span><span class="p">,</span> <span class="mf">14.45</span><span class="p">,</span> <span class="mi">31</span><span class="p">,</span> <span class="mi">120</span><span class="p">],</span>
+                    <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">'Low_fare'</span><span class="p">,</span> <span class="s1">'median_fare'</span><span class="p">,</span> <span class="s1">'Average_fare'</span><span class="p">,</span> <span class="s1">'high_fare'</span><span class="p">])</span>
+                <span class="p">)</span>
+        <span class="o">.</span><span class="n">assign</span><span class="p">(</span>
+            <span class="n">Age_bin</span><span class="o">=</span><span class="k">lambda</span> <span class="n">df</span><span class="p">:</span> <span class="n">df</span><span class="o">.</span><span class="n">Age_bin</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">'category'</span><span class="p">),</span>
+            <span class="n">Fare_bin</span><span class="o">=</span><span class="k">lambda</span> <span class="n">df</span><span class="p">:</span> <span class="n">df</span><span class="o">.</span><span class="n">Fare_bin</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">'category'</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s1">'Age'</span><span class="p">,</span> <span class="s1">'Fare'</span><span class="p">,</span> <span class="s1">'Name'</span><span class="p">,</span> <span class="s1">'Ticket'</span><span class="p">,</span> <span class="s1">'Cabin'</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s1">'Survived == 0'</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">pipe</span><span class="p">(</span><span class="k">lambda</span> <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">get_dummies</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">"Sex"</span><span class="p">,</span> <span class="s2">"Title"</span><span class="p">,</span> <span class="s2">"Age_bin"</span><span class="p">,</span> <span class="s2">"Embarked"</span><span class="p">,</span> <span class="s2">"Fare_bin"</span><span class="p">]))</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">df</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Below I tested the execution time for both variable assignment and chaining.  The variable assignment in this example was 15% faster.</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">timeit</span>
+
+
+<span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="c1"># https://www.pythoncentral.io/time-a-python-function/</span>
+    <span class="k">def</span> <span class="nf">wrapped</span><span class="p">():</span>
+        <span class="k">return</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">wrapped</span>
+
+
+<span class="n">variable</span> <span class="o">=</span> <span class="n">wrapper</span><span class="p">(</span><span class="n">variable_transform</span><span class="p">,</span> <span class="n">raw_df</span><span class="p">)</span>
+<span class="n">chain</span> <span class="o">=</span> <span class="n">wrapper</span><span class="p">(</span><span class="n">chain_transform</span><span class="p">,</span> <span class="n">raw_df</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'Variables took </span><span class="si">{</span><span class="n">timeit</span><span class="o">.</span><span class="n">timeit</span><span class="p">(</span><span class="n">variable</span><span class="p">,</span> <span class="n">number</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1"> seconds'</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'Chaining took </span><span class="si">{</span><span class="n">timeit</span><span class="o">.</span><span class="n">timeit</span><span class="p">(</span><span class="n">chain</span><span class="p">,</span> <span class="n">number</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1"> seconds'</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Variables took 1.56 seconds
+Chaining took 1.90 seconds
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Summary">
+<a class="anchor" href="#Summary" aria-hidden="true"><span class="octicon octicon-link"></span></a>Summary<a class="anchor-link" href="#Summary"> </a>
+</h2>
+<p>Chaining can take some time to get used to but I do agree it's worth the effort.  It makes it very clear what each step does in the transformation without needing to write a single code comment.  Let me know your thoughts on whether or not you prefer variable assignment or chaining.</p>
+
+</div>
+</div>
+</div>
+</div>
+
+
+
+  </div><!-- from https://github.com/utterance/utterances -->
+<script src="https://utteranc.es/client.js"
+        repo="gardnmi/blog"
+        issue-term="title"
+        label="blogpost-comment"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script><a class="u-url" href="/blog/jupyter/pandas/python/2021/08/22/chaining-in-pandas.html" hidden></a>
+</article>
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/blog/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <p class="feed-subscribe">
+          <a href="/blog/feed.xml">
+            <svg class="svg-icon orange">
+              <use xlink:href="/blog/assets/minima-social-icons.svg#rss"></use>
+            </svg><span>Subscribe</span>
+          </a>
+        </p>
+      </div>
+      <div class="footer-col">
+        <p>A Blog about Python, Data, and Analytics.</p>
+      </div>
+    </div>
+
+    <div class="social-links"><ul class="social-media-list"><li><a rel="me" href="https://github.com/gardnmi" title="gardnmi"><svg class="svg-icon grey"><use xlink:href="/blog/assets/minima-social-icons.svg#github"></use></svg></a></li></ul>
+</div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
