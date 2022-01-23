@@ -3,7 +3,7 @@
     
         "post0": {
             "title": "Speeding Up Spark",
-            "content": "Databricks . This post is hosted on databricks. . Please click this link to view it. . It was made using the databricks community edition. To get the most out of this post please setup a free account and import the notebook into your environment. .",
+            "content": "Please click this link to view the post. . This post is hosted on databricks. It was made using the databricks community edition. To get the most out of this post please setup a free account and import the notebook into your environment. .",
             "url": "https://gardnmi.github.io/blog/spark/databricks/python/pyspark/2022/01/23/speeding-up-spark.html",
             "relUrl": "/spark/databricks/python/pyspark/2022/01/23/speeding-up-spark.html",
             "date": " • Jan 23, 2022"
